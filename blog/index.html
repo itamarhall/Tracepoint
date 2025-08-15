@@ -36,6 +36,7 @@
       color: #ffffff;
       text-decoration: underline;
     }
+
     .panel {
       background: rgba(0,0,0,0.9);
       padding: 20px;
@@ -53,6 +54,28 @@
       color: #ffffff;
       border-bottom-color: #ffffff;
     }
+
+    /* Writeups callout (keeps theme colors) */
+    .writeups {
+      border: 1px dashed rgba(0,255,0,0.35);
+    }
+    .cta {
+      display: block;
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.6);
+      border: 1px dotted rgba(138,43,226,0.35);
+      margin-top: 10px;
+    }
+    .cta h3 {
+      margin: 0 0 6px 0;
+      color: #ffffff;
+    }
+    .meta {
+      font-size: 12px;
+      color: #9ad49a;
+    }
+
     footer {
       background: linear-gradient(135deg, #1a1a2e, #0f0f17);
       padding: 10px;
@@ -78,7 +101,16 @@
   <div class="panel">
     <h2>Coming Soon</h2>
     <p>The blog will feature in-depth DFIR case studies, malware analysis, and detection engineering research.</p>
-    <p><strong>First up:</strong> LSASS shellcode case study — handles, VADs, and RWX PE.</p>
+    <p><strong>First up:</strong> LSASS shellcode case study.</p>
+  </div>
+
+  <!-- Visible link to Writeups (same aesthetic/colors) -->
+  <div class="panel writeups">
+    <h2>Writeups</h2>
+    <a class="cta" href="./writeups/">
+      <h3>Browse writeups →</h3>
+      <div class="meta">Deep-dive investigations and step-by-step case studies</div>
+    </a>
   </div>
 
   <footer>
