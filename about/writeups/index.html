@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Writeups | Tracepoint</title>
+  <style>
+    body { font-family: 'Courier New', monospace; margin:0; padding:0;
+      background:linear-gradient(135deg,#0f0f17,#1a1a2e,#3a0ca3); color:#00ff00; text-align:left; }
+    header { background:linear-gradient(135deg,#1a1a2e,#3a0ca3); padding:20px; font-size:24px; text-align:center; color:#fff; }
+    nav { display:flex; justify-content:center; gap:15px; }
+    nav a { color:#8a2be2; text-decoration:none; font-weight:bold; transition:color .3s; }
+    nav a:hover, nav a.active { color:#fff; text-decoration:underline; }
+    .panel { background:rgba(0,0,0,.9); padding:20px; border-radius:10px; max-width:900px; margin:20px auto;
+      box-shadow:0 4px 10px rgba(0,0,0,.5); }
+    .post { margin:10px 0 14px; padding-bottom:10px; border-bottom:1px dashed rgba(138,43,226,.35); }
+    .post a { color:#8a2be2; text-decoration:none; border-bottom:1px dotted #8a2be2; }
+    .post a:hover { color:#fff; border-bottom-color:#fff; }
+    .meta { font-size:12px; color:#9ad49a; }
+    footer { background:linear-gradient(135deg,#1a1a2e,#0f0f17); padding:10px; font-size:14px; text-align:center; color:#fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Writeups</h1>
+    <nav>
+      <a href="../../">Home</a>
+      <a href="../../about/">About</a>
+      <a href="../">Blog</a>
+      <a href="../../projects/">Projects</a>
+      <a href="../../certifications/">Certifications</a>
+      <a href="../../contact/">Contact</a>
+    </nav>
+  </header>
+
+  <div class="panel">
+    <h3>Posts</h3>
+    <div class="post">
+      <a href="./lsass-shellcode-case-study/">LSASS shellcode case study: handles, VADs, and RWX PE</a>
+      <div class="meta">DFIR · Memory Forensics</div>
+    </div>
+    <!-- Add more writeups here as folders with index.html -->
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+  </footer>
+</body>
+</html>
