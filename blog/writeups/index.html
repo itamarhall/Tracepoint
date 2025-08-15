@@ -5,19 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Writeups | Tracepoint</title>
   <style>
-    body { font-family: 'Courier New', monospace; margin:0; padding:0;
-      background:linear-gradient(135deg,#0f0f17,#1a1a2e,#3a0ca3); color:#00ff00; text-align:left; }
-    header { background:linear-gradient(135deg,#1a1a2e,#3a0ca3); padding:20px; font-size:24px; text-align:center; color:#fff; }
-    nav { display:flex; justify-content:center; gap:15px; }
-    nav a { color:#8a2be2; text-decoration:none; font-weight:bold; transition:color .3s; }
-    nav a:hover, nav a.active { color:#fff; text-decoration:underline; }
-    .panel { background:rgba(0,0,0,.9); padding:20px; border-radius:10px; max-width:900px; margin:20px auto;
-      box-shadow:0 4px 10px rgba(0,0,0,.5); }
-    .post { margin:10px 0 14px; padding-bottom:10px; border-bottom:1px dashed rgba(138,43,226,.35); }
-    .post a { color:#8a2be2; text-decoration:none; border-bottom:1px dotted #8a2be2; }
-    .post a:hover { color:#fff; border-bottom-color:#fff; }
-    .meta { font-size:12px; color:#9ad49a; }
-    footer { background:linear-gradient(135deg,#1a1a2e,#0f0f17); padding:10px; font-size:14px; text-align:center; color:#fff; }
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
+      color: #00ff00;
+      text-align: left;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
+      padding: 20px;
+      font-size: 24px;
+      text-align: center;
+      color: #ffffff;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    nav a {
+      color: #8a2be2;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover, nav a.active {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* Terminal-style intro */
+    .terminal {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      border: 1px dashed rgba(0,255,0,0.35);
+    }
+    .terminal h2 {
+      margin-top: 0;
+      color: #00ff00;
+    }
+    .command {
+      color: #00ff00;
+      margin-bottom: 6px;
+    }
+    .output {
+      color: #00ff00;
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+    }
+
+    /* Posts list – same feel as elsewhere */
+    .panel {
+      background: rgba(0,0,0,0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .post {
+      margin: 10px 0 14px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(138,43,226,0.35);
+    }
+    .post a {
+      color: #8a2be2;
+      text-decoration: none;
+      border-bottom: 1px dotted #8a2be2;
+    }
+    .post a:hover {
+      color: #ffffff;
+      border-bottom-color: #ffffff;
+    }
+    .meta {
+      font-size: 12px;
+      color: #9ad49a;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
+      padding: 10px;
+      font-size: 14px;
+      text-align: center;
+      color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -26,13 +103,25 @@
     <nav>
       <a href="../../">Home</a>
       <a href="../../about/">About</a>
-      <a href="../">Blog</a>
+      <a href="../" class="active">Blog</a>
       <a href="../../projects/">Projects</a>
       <a href="../../certifications/">Certifications</a>
       <a href="../../contact/">Contact</a>
     </nav>
   </header>
 
+  <!-- Terminal-style hero (green console look) -->
+  <div class="terminal">
+    <h2>Coming Soon</h2>
+    <p class="output">
+      This section will host deep-dive DFIR case studies and step-by-step investigations.
+    </p>
+    <p class="output">
+      <strong>First up:</strong> LSASS shellcode case study — handles, VADs, and a memory-only RWX PE.
+    </p>
+  </div>
+
+  <!-- Posts list (unchanged style) -->
   <div class="panel">
     <h3>Posts</h3>
     <div class="post">
