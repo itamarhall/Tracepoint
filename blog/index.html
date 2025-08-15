@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog | Tracepoint</title>
-    <style>
-        body { font-family: 'Courier New', monospace; margin: 0; padding: 0; background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3); color: #00ff00; text-align: center; }
-        header { background: linear-gradient(135deg, #1a1a2e, #3a0ca3); padding: 20px; font-size: 24px; color: #ffffff; }
-        nav a { color: #8a2be2; margin: 0 15px; text-decoration: none; font-weight: bold; }
-        nav a:hover { color: #ffffff; }
-        .panel { background: rgba(0,0,0,0.9); padding: 40px; border-radius: 10px; max-width: 600px; margin: 40px auto; }
-        footer { background: linear-gradient(135deg, #1a1a2e, #0f0f17); padding: 10px; font-size: 14px; color: #ffffff; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog | Tracepoint</title>
+  <style>
+    body{font-family:'Courier New',monospace;margin:0;background:linear-gradient(135deg,#0f0f17,#1a1a2e,#3a0ca3);color:#00ff00}
+    .panel{max-width:800px;margin:48px auto;background:rgba(0,0,0,.9);border-radius:12px;padding:28px 26px;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+    h1{margin:0 0 10px;color:#fff}
+    p{color:#fff;line-height:1.55}
+    .soon{display:inline-block;padding:4px 10px;border:1px dashed #8a2be2;border-radius:8px;margin-top:6px;color:#fff}
+    a.inline{color:#8a2be2;text-decoration:none;border-bottom:1px dotted #8a2be2}
+    a.inline:hover{color:#fff;border-bottom-color:#fff}
+    footer{color:#fff;text-align:center;font-size:14px;margin:26px 0 32px}
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Blog</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="blog.html" class="active">Blog</a>
-            <a href="projects.html">Projects</a>
-            <a href="certifications.html">Certifications</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
-    <div class="panel">
-        <h2>Coming Soon</h2>
-        <p>The blog will feature in-depth DFIR case studies, malware analysis, and detection engineering research.</p>
-    </div>
-    <footer>
-        &copy; 2025 Tracepoint — Created by Itamar Hällström
-    </footer>
+  <main class="panel">
+    <h1>Blog</h1>
+    <p><strong>Upcoming:</strong> LSASS shellcode — a short case study.</p>
+    <span class="soon">publishing soon</span>
+    <p style="margin-top:16px;">
+      Back to <a class="inline" href="/">home</a>.
+    </p>
+  </main>
+  <footer>&copy; 2025 Tracepoint — Created by Itamar Hällström</footer>
 </body>
 </html>
