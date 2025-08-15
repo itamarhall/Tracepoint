@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Tracepoint</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
+            color: #00ff00;
+            text-align: left;
+        }
+        header {
+            background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
+            padding: 20px;
+            font-size: 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        nav a {
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .terminal {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: 20px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .command {
+            color: #00ff00;
+            margin-bottom: 6px;
+        }
+        .output {
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        ul {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        li {
+            color: #ffffff;
+            margin: 6px 0;
+        }
+        .blink {
+            animation: blink 1s infinite;
+            color: #00ff00;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        footer {
+            background: linear-gradient(135deg, #1a1a2e, #0f0f17);
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border: 1px solid #8a2be2;
+            border-radius: 999px;
+            color: #ffffff;
+            background: rgba(138,43,226,0.15);
+            margin-left: 6px;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+        a.inline {
+            color: #8a2be2;
+            text-decoration: none;
+            border-bottom: 1px dotted #8a2be2;
+        }
+        a.inline:hover {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tracepoint</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="projects.html">Projects</a>
+            <a href="certifications.html">Certifications</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="terminal">
+        <p class="command">$ whoami</p>
+        <p class="output">
+            Itamar Hällström — MDR Analyst <span class="pill">Unit 42</span><br>
+            Interests: Digital Forensics & Incident Response (DFIR) and Detection Engineering.
+        </p>
+
+        <p class="command">$ cat about.txt</p>
+        <p class="output">
+            Tracepoint is where I document investigations, detection engineering experiments, and lessons learned from real incidents.
+            Expect practical, reproducible workflows and artifacts you can use right away.
+        </p>
+
+        <p class="command">$ ls content/</p>
+        <ul>
+            <li>🔥 Incident response workflows & case studies</li>
+            <li>🧪 Detection engineering playbooks & Sigma/YARA experiments</li>
+            <li>🕵️ Malware & memory forensics </li>
+            <li>⚙️ Automation: Python, PowerShell, tools for SOC/IR</li>
+        </ul>
+
+        <p class="command">$ echo "Current Role"</p>
+        <p class="output">
+            MDR Analyst @ Unit 42 — investigations, triage, threat hunting.
+            I enjoy bridging deep-dive forensics with pragmatic detections that actually fire.
+        </p>
+
+        <p class="command">$</p><span class="blink">_</span>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+    </footer>
+</body>
+</html>
