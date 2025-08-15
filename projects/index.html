@@ -1,29 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projects | Tracepoint</title>
   <style>
-    body{font-family:'Courier New',monospace;margin:0;background:linear-gradient(135deg,#0f0f17,#1a1a2e,#3a0ca3);color:#00ff00}
-    .panel{max-width:800px;margin:48px auto;background:rgba(0,0,0,.9);border-radius:12px;padding:28px 26px;box-shadow:0 6px 22px rgba(0,0,0,.45)}
-    h1{margin:0 0 10px;color:#fff}
-    p{color:#fff;line-height:1.55}
-    .soon{display:inline-block;padding:4px 10px;border:1px dashed #8a2be2;border-radius:8px;margin-top:6px;color:#fff}
-    a.inline{color:#8a2be2;text-decoration:none;border-bottom:1px dotted #8a2be2}
-    a.inline:hover{color:#fff;border-bottom-color:#fff}
-    footer{color:#fff;text-align:center;font-size:14px;margin:26px 0 32px}
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
+      color: #00ff00;
+      text-align: left;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
+      padding: 20px;
+      font-size: 24px;
+      text-align: center;
+      color: #ffffff;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    nav a {
+      color: #8a2be2;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover,
+    nav a.active {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    .panel {
+      background: rgba(0,0,0,0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    footer {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
+      padding: 10px;
+      font-size: 14px;
+      text-align: center;
+      color: #ffffff;
+    }
   </style>
 </head>
 <body>
-  <main class="panel">
+  <header>
     <h1>Projects</h1>
-    <p>Tooling and write-ups that support DFIR and detection engineering.</p>
-    <span class="soon">project list coming soon</span>
-    <p style="margin-top:16px;">
-      Back to <a class="inline" href="/">home</a>.
-    </p>
-  </main>
-  <footer>&copy; 2025 Tracepoint — Created by Itamar Hällström</footer>
+    <nav>
+      <a href="../">Home</a>
+      <a href="../about/">About</a>
+      <a href="../blog/">Blog</a>
+      <a href="./" class="active">Projects</a>
+      <a href="../certifications/">Certifications</a>
+      <a href="../contact/">Contact</a>
+    </nav>
+  </header>
+
+  <div class="panel">
+    <h2>Coming Soon</h2>
+    <p>This section will showcase DFIR tooling, security automation scripts, and open-source contributions.</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Tracepoint — Created by Itamar Hällström
+  </footer>
 </body>
 </html>
