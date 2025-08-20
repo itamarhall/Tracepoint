@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AbuseCheck | Tracepoint</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
+      color: #00ff00;
+      text-align: left;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
+      padding: 20px;
+      font-size: 24px;
+      text-align: center;
+      color: #ffffff;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    nav a {
+      color: #8a2be2;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover,
+    nav a.active {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    .back {
+      max-width: 900px;
+      margin: 14px auto -4px;
+      padding: 0 16px;
+    }
+    .back a {
+      color: #ffffff;
+      text-decoration: none;
+      border-bottom: 1px dotted #ffffff;
+    }
+    /* Terminal-style hero */
+    .terminal {
+      background: rgba(0,0,0,0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    .terminal .command {
+      color: #00ff00;
+      margin-bottom: 6px;
+    }
+    .terminal .output {
+      color: #ffffff;
+      margin: 0 0 16px 0;
+      line-height: 1.6;
+    }
+    .terminal .blink {
+      animation: blink 1s infinite;
+      color: #00ff00;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    /* Panel styling */
+    .panel {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    .panel h3 {
+      margin-top: 0;
+      color: #00ff00;
+    }
+    .panel p, .panel li {
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    .panel a {
+      color: #8a2be2;
+      text-decoration: none;
+      border-bottom: 1px dotted #8a2be2;
+    }
+    .panel a:hover {
+      color: #ffffff;
+      border-bottom-color: #ffffff;
+    }
+    /* Mini-terminal for command examples */
+    .mini-term {
+      background: #000;
+      border: 1px dashed rgba(138, 43, 226, 0.35);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      overflow: auto;
+    }
+    .mini-term .command {
+      color: #00ff00;
+      margin: 0 0 6px 0;
+    }
+    .mini-term .output {
+      color: #ffffff;
+      margin: 0;
+    }
+    /* Inline flag badges */
+    code.flag {
+      background:#000;
+      color:#00ff00;
+      border:1px solid rgba(138,43,226,0.35);
+      padding:1px 6px;
+      border-radius: 4px;
+    }
+    footer {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
+      padding: 10px;
+      font-size: 14px;
+      text-align: center;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tracepoint</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/blog/">Blog</a>
+      <a href="/projects/" class="active">Projects</a>
+      <a href="/certifications/">Certifications</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </header>
+
+  <div class="back"><a href="/projects/">&larr; Back to Projects</a></div>
+
+  <!-- Terminal-style hero block -->
+  <div class="terminal">
+    <p class="command">$ echo "AbuseCheck"</p>
+    <p class="output">
+      <strong>AbuseCheck</strong> is a bulk IP reputation tool that queries the AbuseIPDB API to
+      determine the risk level of IP addresses. It deduplicates inputs, skips
+      internal addresses, and produces CSV/TXT reports plus a visual bar chart.
+      API keys can be stored securely for repeat runs.
+    </p>
+    <p class="command">$</p><span class="blink">_</span>
+  </div>
+
+  <div class="panel">
+    <h3>Overview</h3>
+    <p>
+      AbuseCheck automates bulk lookups against AbuseIPDB for public IPs,
+      gracefully handles private ranges, deduplicates the input list, and writes a CSV,
+      a formatted TXT table, and a PNG severity chart.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h3>Features</h3>
+    <ul>
+      <li>Accepts line- or comma-separated IP lists via <code class="flag">-f</code></li>
+      <li>API key via <code class="flag">-API</code> or key file via <code class="flag">-APIf</code> with optional one-time “remember”</li>
+      <li>Generates CSV &amp; TXT reports (ISP, usage, hostnames, domain, country, score)</li>
+      <li>Creates a PNG bar chart of risk categories</li>
+      <li>Skips private/internal IPs automatically</li>
+      <li>Writes outputs to a specified directory and creates it if missing <code class="flag">-out</code></li>
+      <li>Concurrent lookups with configurable workers</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h3>Installation</h3>
+    <div class="mini-term">
+      <p class="command">$ echo "Clone &amp; install (Python)"</p>
+      <pre class="output">git clone https://github.com/itamarhall/AbuseCheck.git
+cd AbuseCheck
+pip install -r requirements.txt</pre>
+    </div>
+    <div class="mini-term">
+      <p class="command">$ echo "Binary (no Python required)"</p>
+      <p class="output">Download from <a href="https://github.com/itamarhall/AbuseCheck/releases" target="_blank" rel="noopener">Releases</a></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Usage</h3>
+    <div class="mini-term">
+      <p class="command">$ echo "Show help"</p>
+      <pre class="output">python3 AbuseCheck.py -H</pre>
+    </div>
+    <div class="mini-term">
+      <p class="command">$ echo "Run with IP list"</p>
+      <pre class="output">python3 AbuseCheck.py -f ips.txt -API YOUR_API_KEY -out ./results</pre>
+    </div>
+    <div class="mini-term">
+      <p class="command">$ echo "Use a key file"</p>
+      <pre class="output">python3 AbuseCheck.py -f ips.txt -APIf ./abuseipdb.key -out ./results</pre>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Links</h3>
+    <p class="output">
+      Source code: <a href="https://github.com/itamarhall/AbuseCheck" target="_blank" rel="noopener">github.com/itamarhall/AbuseCheck</a><br/>
+      Windows binaries: <a href="https://github.com/itamarhall/AbuseCheck/releases" target="_blank" rel="noopener">Releases</a>
+    </p>
+  </div>
+
+  <footer>
+    &copy; 2025 Tracepoint — Created by Itamar Hällström
+  </footer>
+</body>
+</html>
