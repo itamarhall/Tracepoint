@@ -327,7 +327,7 @@ footer {
 <img src="./assets/lsass.exe enum.png" alt="lsass.exe enum">
 <figcaption>lsass.exe enum</figcaption>
 </figure>
-<p>The suspicious process is likely <code class="inline-code">PID 12028</code>. Since <code class="inline-code">wininit.exe</code> starts early in the boot process—and <code class="inline-code">lsass.exe</code> should follow right after—seeing an <code class="inline-code">lsass.exe</code> with a high PID like <code class="inline-code">12028</code> and a parent of <code class="inline-code">11872</code> strongly suggests it’s malicious.</p>
+<p>The suspicious process is likely <code class="inline-code">PID 12028</code>. Since <code class="inline-code">wininit.exe</code> starts early in the boot process-and <code class="inline-code">lsass.exe</code> should follow right after-seeing an <code class="inline-code">lsass.exe</code> with a high PID like <code class="inline-code">12028</code> and a parent of <code class="inline-code">11872</code> strongly suggests it’s malicious.</p>
 <p>But we can also easily verify this:</p>
 <pre><code>windows.pslist | grep 628</code></pre>
 <figure class="figure">
@@ -386,8 +386,8 @@ windows.netstat</code></pre>
 <figcaption>cmd.exe handles</figcaption>
 </figure>
 <ul>
-<li><strong><code class="inline-code">\Users\User\Downloads</code></strong> — This shows <code class="inline-code">cmd.exe</code> enumerating or interacting with the Downloads folder. While not malicious by itself, in the context of being spawned by a rogue <code class="inline-code">lsass.exe</code>, it suggests the attacker may have been browsing user files or interacting with the directory in some way.</li>
-<li><strong><code class="inline-code">\Device\Afd\Endpoint</code></strong> — <code class="inline-code">cmd.exe</code> normally doesn’t handle raw sockets or network endpoints. Seeing an AFD handle here strongly suggests that commands were executed through this shell which initiated or supported network activity (e.g., C2 communication, data transfer, or lateral movement).</li>
+<li><strong><code class="inline-code">\Users\User\Downloads</code></strong> - This shows <code class="inline-code">cmd.exe</code> enumerating or interacting with the Downloads folder. While not malicious by itself, in the context of being spawned by a rogue <code class="inline-code">lsass.exe</code>, it suggests the attacker may have been browsing user files or interacting with the directory in some way.</li>
+<li><strong><code class="inline-code">\Device\Afd\Endpoint</code></strong> - <code class="inline-code">cmd.exe</code> normally doesn’t handle raw sockets or network endpoints. Seeing an AFD handle here strongly suggests that commands were executed through this shell which initiated or supported network activity (e.g., C2 communication, data transfer, or lateral movement).</li>
 </ul>
 <p>On its own, <code class="inline-code">cmd.exe</code> may not appear overtly suspicious, but the presence of handles to the <strong>Downloads folder</strong> and <strong>AFD Endpoint</strong>, combined with its parent-child relationship to the rogue <code class="inline-code">lsass.exe</code>, indicates it was actively leveraged for attacker operations.</p>
 <p><strong>Detecting Memory Injection with <code class="inline-code">ldrmodules</code>, <code class="inline-code">malfind</code> and <code class="inline-code">ProcSentinel</code>:</strong></p>
@@ -400,14 +400,14 @@ windows.netstat</code></pre>
 </figure>
 <p>In <code class="inline-code">lsass.exe</code>, the module at <code class="inline-code">0x140000000</code> is absent from all PEB lists and has no mapped path, strongly indicating memory-resident injected code (manual mapping/reflective injection).</p>
 <p>I will quickly mention that cmd.exe does not show anything of note.</p>
-<p>The <strong><code class="inline-code">malfind</code></strong> plugin identifies <strong>injected code or DLLs</strong> in user-mode memory by analyzing VAD structures and memory protections. It highlights regions that are <strong>private and executable</strong>—especially when marked <strong>RWX</strong>—since they lack file mappings and remain hidden from standard inspection tools.</p>
+<p>The <strong><code class="inline-code">malfind</code></strong> plugin identifies <strong>injected code or DLLs</strong> in user-mode memory by analyzing VAD structures and memory protections. It highlights regions that are <strong>private and executable</strong>-especially when marked <strong>RWX</strong>-since they lack file mappings and remain hidden from standard inspection tools.</p>
 <p><code class="inline-code">lsass.exe - PID 12028</code></p>
 <pre><code>windows.malfind --pid 12028</code></pre>
 <figure class="figure">
 <img src="./assets/lsass.exe malfind.png" alt="lsass.exe malfind">
 <figcaption>lsass.exe malfind</figcaption>
 </figure>
-<p>In <code class="inline-code">lsass.exe</code>, <code class="inline-code">malfind</code> reveals an RWX memory region (<code class="inline-code">0x140000000-0x140004fff</code>) containing an <code class="inline-code">MZ</code> header with no backing file, confirming a reflectively injected PE. The region is marked <code class="inline-code">PAGE_EXECUTE_READWRITE</code>, a highly suspicious protection flag since legitimate modules are rarely loaded with both write and execute permissions — a strong indicator of malicious code injection.</p>
+<p>In <code class="inline-code">lsass.exe</code>, <code class="inline-code">malfind</code> reveals an RWX memory region (<code class="inline-code">0x140000000-0x140004fff</code>) containing an <code class="inline-code">MZ</code> header with no backing file, confirming a reflectively injected PE. The region is marked <code class="inline-code">PAGE_EXECUTE_READWRITE</code>, a highly suspicious protection flag since legitimate modules are rarely loaded with both write and execute permissions - a strong indicator of malicious code injection.</p>
 <p><strong><code class="inline-code">windows.procsentinel</code></strong> is a fairly new plugin that scans processes for anomalies such as hollowing, injected code, suspicious RWX regions, or duplicate singleton processes (like multiple <code class="inline-code">lsass.exe</code>). It also dumps suspicious memory regions for deeper analysis.</p>
 <pre><code>windows.procsentinel</code></pre>
 <figure class="figure">
@@ -504,7 +504,7 @@ windows.netstat</code></pre>
 <p>These actions significantly reduce detection on the host and likely enabled execution from <code class="inline-code">Downloads</code> without interception.  </p>
 <p><strong>MITRE ATT&amp;CK</strong>: <strong>T1562.001 - Impair Defenses (Disable or Modify Tools)</strong>.</p>
 <h3>Investigation - Poor man's malware analysis:</h3>
-<p>This section uses basic triage tools—<strong>PEStudio</strong>, <strong>strings</strong>, and <strong>MemProcFS</strong> (for running Elastic YARA).</p>
+<p>This section uses basic triage tools-<strong>PEStudio</strong>, <strong>strings</strong>, and <strong>MemProcFS</strong> (for running Elastic YARA).</p>
 <p>Target: <code class="inline-code">svchost.exe</code> at <code class="inline-code">C:\Users\User\AppData\Local\Temp\</code></p>
 <p><strong>PEStudio - basic info</strong>  </p>
 <figure class="figure">
@@ -539,7 +539,7 @@ WriteProcessMemory</code></pre>
 <img src="./assets/svchost hollowing.png" alt="svchost hollowing">
 <figcaption>svchost hollowing</figcaption>
 </figure>
-<p>Strings and imports together narrate a textbook RunPE/process-hollowing sequence: a benign host is created with its primary thread suspended (<code>CreateProcess</code>), remote memory is reserved in the target (<code>VirtualAllocEx</code>), the payload’s PE headers and sections are written in (<code>WriteProcessMemory</code>), the thread context is redirected to the payload entry point (<code>GetThreadContext</code>/<code>SetThreadContext</code>), and execution is handed off by resuming the thread (<code>ResumeThread</code>)—a flow squarely consistent with <strong>MITRE ATT&amp;CK T1055.012 (Process Hollowing)</strong>.</p>
+<p>Strings and imports together narrate a textbook RunPE/process-hollowing sequence: a benign host is created with its primary thread suspended (<code>CreateProcess</code>), remote memory is reserved in the target (<code>VirtualAllocEx</code>), the payload’s PE headers and sections are written in (<code>WriteProcessMemory</code>), the thread context is redirected to the payload entry point (<code>GetThreadContext</code>/<code>SetThreadContext</code>), and execution is handed off by resuming the thread (<code>ResumeThread</code>)-a flow squarely consistent with <strong>MITRE ATT&amp;CK T1055.012 (Process Hollowing)</strong>.</p>
 <hr>
 <p>Target: <code class="inline-code">invoice.pdf.exe</code> at <code class="inline-code">C:\Users\User\Downloads\</code></p>
 <p><strong>PEStudio - basic info</strong>  </p>
@@ -589,7 +589,7 @@ WriteProcessMemory</code></pre>
 <p>Malicious injector that performs process hollowing/reflective injection into <code class="inline-code">lsass.exe</code> (memory-resident PE).</p>
 <p><strong>Victim/target process - <code class="inline-code">lsass.exe</code></strong>  </p>
 <p>Hosts the injected code and subsequently enables attacker activity (e.g., spawning <code class="inline-code">cmd.exe</code>).</p>
-<p>Amcache provides <strong>execution evidence</strong> that <code class="inline-code">invoice.pdf.exe</code> ran; its strings indicate a Go-based loader. The Temp <code class="inline-code">svchost.exe</code> shows classic hollowing imports/strings, and LSASS contains an unmapped RWX region with an MZ header—consistent with reflective injection—followed by an anomalous <code class="inline-code">cmd.exe</code> child. Their absence in <code class="inline-code">pslist/psscan</code> is likely due to short-lived execution.</p>
+<p>Amcache provides <strong>execution evidence</strong> that <code class="inline-code">invoice.pdf.exe</code> ran; its strings indicate a Go-based loader. The Temp <code class="inline-code">svchost.exe</code> shows classic hollowing imports/strings, and LSASS contains an unmapped RWX region with an MZ header-consistent with reflective injection-followed by an anomalous <code class="inline-code">cmd.exe</code> child. Their absence in <code class="inline-code">pslist/psscan</code> is likely due to short-lived execution.</p>
 <hr>
 <p>Target: <code class="inline-code">lsass.exe PID 12028</code> </p>
 <p><strong>Elastics's YARA Rules</strong></p>
@@ -722,7 +722,7 @@ Matches:
 <img src="./assets/lsass RDP.png" alt="lsass RDP">
 <figcaption>lsass RDP</figcaption>
 </figure>
-<p><strong>Result:</strong> <code class="inline-code">lsass.exe</code> connected to <strong>192.168.0.157:3389</strong> at <strong>2025-01-27 02:30:55 UTC</strong>—exactly what we’d expect given the Elastic YARA hits on the injected VAD (Metasploit-style connect stub).</p>
+<p><strong>Result:</strong> <code class="inline-code">lsass.exe</code> connected to <strong>192.168.0.157:3389</strong> at <strong>2025-01-27 02:30:55 UTC</strong>-exactly what we’d expect given the Elastic YARA hits on the injected VAD (Metasploit-style connect stub).</p>
 <h3>MITRE ATT&amp;CK</h3>
 
 <div class="callout">
@@ -837,7 +837,7 @@ Matches:
   </tbody>
 </table>
 </div>
-<footer>&copy; 2025 Tracepoint — Created by Itamar Hällström</footer>
+<footer>&copy; 2025 Tracepoint - Created by Itamar Hällström</footer>
 </div>
 <div id="lightbox" class="lightbox" aria-hidden="true">
   <button class="btn close" aria-label="Close">&times;</button>
