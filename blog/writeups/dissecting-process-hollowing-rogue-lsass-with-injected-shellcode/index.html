@@ -356,10 +356,10 @@ windows.netstat</code></pre>
 <h3>Findings</h3>
 <div class="callout"><ul>
 <li><strong>Suspicious Processes</strong></li>
-<li><code>12028 – lsass.exe</code></li>
-<li><code>12088 – cmd.exe</code></li>
-<li><code>5240 – systeminfo.exe</code></li>
-<li><code>12100 – conhost.exe</code></li>
+<li><code>12028 - lsass.exe</code></li>
+<li><code>12088 - cmd.exe</code></li>
+<li><code>5240 - systeminfo.exe</code></li>
+<li><code>12100 - conhost.exe</code></li>
 <li><strong>Host IP Address</strong></li>
 <li><code>192.168.0.165</code></li>
 </ul></div>
@@ -389,7 +389,7 @@ windows.netstat</code></pre>
 <li><strong><code class="inline-code">\Users\User\Downloads</code></strong> — This shows <code class="inline-code">cmd.exe</code> enumerating or interacting with the Downloads folder. While not malicious by itself, in the context of being spawned by a rogue <code class="inline-code">lsass.exe</code>, it suggests the attacker may have been browsing user files or interacting with the directory in some way.</li>
 <li><strong><code class="inline-code">\Device\Afd\Endpoint</code></strong> — <code class="inline-code">cmd.exe</code> normally doesn’t handle raw sockets or network endpoints. Seeing an AFD handle here strongly suggests that commands were executed through this shell which initiated or supported network activity (e.g., C2 communication, data transfer, or lateral movement).</li>
 </ul>
-<p>On its own, <code class="inline-code">cmd.exe</code> may not appear overtly suspicious, but the presence of handles to the <strong>Downloads folder</strong> and <strong>AFD Endpoint</strong>, combined with its parent–child relationship to the rogue <code class="inline-code">lsass.exe</code>, indicates it was actively leveraged for attacker operations.</p>
+<p>On its own, <code class="inline-code">cmd.exe</code> may not appear overtly suspicious, but the presence of handles to the <strong>Downloads folder</strong> and <strong>AFD Endpoint</strong>, combined with its parent-child relationship to the rogue <code class="inline-code">lsass.exe</code>, indicates it was actively leveraged for attacker operations.</p>
 <p><strong>Detecting Memory Injection with <code class="inline-code">ldrmodules</code>, <code class="inline-code">malfind</code> and <code class="inline-code">ProcSentinel</code>:</strong></p>
 <p><code class="inline-code">windows.ldrmodules</code> inspects the PEB’s DLL lists (InLoadOrder, InInitOrder, InMemOrder) to spot inconsistencies that indicate hidden/injected modules. It also shows each module’s <strong>Mapped Path</strong>: legit DLLs should map from <strong>System32/SysWOW64 (along with a few others)</strong>. <strong>Unusual paths</strong> (e.g., Downloads, Temp) <strong>or a blank path</strong> (often memory-only/manual-mapped or deleted-on-disk) are strong injection/tampering indicators.</p>
 <p><code class="inline-code">lsass.exe - PID 12028</code></p>
@@ -407,7 +407,7 @@ windows.netstat</code></pre>
 <img src="./assets/lsass.exe malfind.png" alt="lsass.exe malfind">
 <figcaption>lsass.exe malfind</figcaption>
 </figure>
-<p>In <code class="inline-code">lsass.exe</code>, <code class="inline-code">malfind</code> reveals an RWX memory region (<code class="inline-code">0x140000000–0x140004fff</code>) containing an <code class="inline-code">MZ</code> header with no backing file, confirming a reflectively injected PE. The region is marked <code class="inline-code">PAGE_EXECUTE_READWRITE</code>, a highly suspicious protection flag since legitimate modules are rarely loaded with both write and execute permissions — a strong indicator of malicious code injection.</p>
+<p>In <code class="inline-code">lsass.exe</code>, <code class="inline-code">malfind</code> reveals an RWX memory region (<code class="inline-code">0x140000000-0x140004fff</code>) containing an <code class="inline-code">MZ</code> header with no backing file, confirming a reflectively injected PE. The region is marked <code class="inline-code">PAGE_EXECUTE_READWRITE</code>, a highly suspicious protection flag since legitimate modules are rarely loaded with both write and execute permissions — a strong indicator of malicious code injection.</p>
 <p><strong><code class="inline-code">windows.procsentinel</code></strong> is a fairly new plugin that scans processes for anomalies such as hollowing, injected code, suspicious RWX regions, or duplicate singleton processes (like multiple <code class="inline-code">lsass.exe</code>). It also dumps suspicious memory regions for deeper analysis.</p>
 <pre><code>windows.procsentinel</code></pre>
 <figure class="figure">
@@ -424,15 +424,15 @@ windows.netstat</code></pre>
 <p>The results reveal a file named <strong><code class="inline-code">invoice.pdf.exe</code></strong> in the <code class="inline-code">Downloads</code> folder - a classic <strong>masquerading technique</strong> where a malicious executable disguises itself as a benign document.</p>
 <h3>Findings</h3>
 <div class="callout"><ul>
-<li><strong>Rogue <code>lsass.exe</code> (PID 12028)</strong> – duplicate singleton with a reflectively injected PE (<code>RWX</code> region, MZ header, no mapped path).</li>
-<li><strong><code>cmd.exe</code> (PID 12088)</strong> – spawned as a child of the rogue LSASS, interacting with the <code>Downloads</code> directory.</li>
-<li><strong>Suspicious file <code>invoice.pdf.exe</code></strong> – discovered in <code>Downloads</code>, posing as a document to evade detection.</li>
+<li><strong>Rogue <code>lsass.exe</code> (PID 12028)</strong> - duplicate singleton with a reflectively injected PE (<code>RWX</code> region, MZ header, no mapped path).</li>
+<li><strong><code>cmd.exe</code> (PID 12088)</strong> - spawned as a child of the rogue LSASS, interacting with the <code>Downloads</code> directory.</li>
+<li><strong>Suspicious file <code>invoice.pdf.exe</code></strong> - discovered in <code>Downloads</code>, posing as a document to evade detection.</li>
 </ul></div>
 <h3>Mapped TTPs (MITRE ATT&amp;CK)</h3>
 
 <div class="callout">
   <ul>
-    <li><strong>Process Injection (T1055)</strong> – reflective PE injection into <code>lsass.exe</code>.</li>
+    <li><strong>Process Injection (T1055)</strong> - reflective PE injection into <code>lsass.exe</code>.</li>
     <li><strong>Masquerading (T1036)</strong>
       <ul>
         <li>Rogue <code>lsass.exe</code> imitating a legitimate system process.</li>
@@ -444,13 +444,13 @@ windows.netstat</code></pre>
 
 <div class="callout">
   <ul>
-    <li><strong>Command and Scripting Interpreter (T1059)</strong> – attacker use of <code>cmd.exe</code>.</li>
+    <li><strong>Command and Scripting Interpreter (T1059)</strong> - attacker use of <code>cmd.exe</code>.</li>
   </ul>
 </div>
 <h3><strong>Investigation - Extracting artifacts for disk based analysis</strong></h3>
 <p>Now that we have solid evidence of malicious activity, including processes and files present in the memory image we can pivot to a more traditional disk based forensics by extracting several artifacts:</p>
 <ul>
-<li><strong>ShimCache (AppCompatCache)</strong> – treat as <strong>evidence of presence</strong>, not reliable proof of execution. Use it mainly to show a file existed (with rare exceptions <a href="https://www.youtube.com/watch?v=DsqKIVcfA90">1</a>, <a href="https://github.com/EricZimmerman/AppCompatCacheParser/issues/6">2</a>). Even if the SYSTEM hive can’t be exported, Volatility 3’s <code class="inline-code">windows.shimcache</code> can parse it from memory. Note limitations and corroborate with Amcache/PCA/Prefetch.</li>
+<li><strong>ShimCache (AppCompatCache)</strong> - treat as <strong>evidence of presence</strong>, not reliable proof of execution. Use it mainly to show a file existed (with rare exceptions <a href="https://www.youtube.com/watch?v=DsqKIVcfA90">1</a>, <a href="https://github.com/EricZimmerman/AppCompatCacheParser/issues/6">2</a>). Even if the SYSTEM hive can’t be exported, Volatility 3’s <code class="inline-code">windows.shimcache</code> can parse it from memory. Note limitations and corroborate with Amcache/PCA/Prefetch.</li>
 <li><strong>Amcache</strong> - install/execution metadata (path, hash, timestamps).</li>
 <li><strong>PCA (Program Compatibility Assistant)</strong> - AppCompat traces tied to user launches.</li>
 <li><strong>Prefetch</strong> - Evidence of execution for PE binaries.</li>
@@ -502,7 +502,7 @@ windows.netstat</code></pre>
 <li><strong>2025-01-27 02:27:51</strong> - Defender Real-Time Protection disabled.</li>
 </ul>
 <p>These actions significantly reduce detection on the host and likely enabled execution from <code class="inline-code">Downloads</code> without interception.  </p>
-<p><strong>MITRE ATT&amp;CK</strong>: <strong>T1562.001 – Impair Defenses (Disable or Modify Tools)</strong>.</p>
+<p><strong>MITRE ATT&amp;CK</strong>: <strong>T1562.001 - Impair Defenses (Disable or Modify Tools)</strong>.</p>
 <h3>Investigation - Poor man's malware analysis:</h3>
 <p>This section uses basic triage tools—<strong>PEStudio</strong>, <strong>strings</strong>, and <strong>MemProcFS</strong> (for running Elastic YARA).</p>
 <p>Target: <code class="inline-code">svchost.exe</code> at <code class="inline-code">C:\Users\User\AppData\Local\Temp\</code></p>
@@ -727,14 +727,14 @@ Matches:
 
 <div class="callout">
   <ul>
-    <li><strong>T1055 – Process Injection</strong> (primary)
+    <li><strong>T1055 - Process Injection</strong> (primary)
       <ul>
-        <li><strong>T1055.012 – Process Hollowing</strong> (sub-technique)</li>
+        <li><strong>T1055.012 - Process Hollowing</strong> (sub-technique)</li>
       </ul>
     </li>
-    <li><strong>T1021 – Remote Services</strong> <em>(RDP)</em>
+    <li><strong>T1021 - Remote Services</strong> <em>(RDP)</em>
       <ul>
-        <li><strong>T1021.001 – Remote Services: RDP</strong> <em>(lateral movement via RDP)</em></li>
+        <li><strong>T1021.001 - Remote Services: RDP</strong> <em>(lateral movement via RDP)</em></li>
       </ul>
     </li>
   </ul>
@@ -748,23 +748,23 @@ Matches:
 <img src="./assets/invoice timeline.png" alt="invoice timeline">
 <figcaption>invoice timeline</figcaption>
 </figure>
-<p><code class="inline-code">invoice.pdf.exe</code> was <strong>created at 2025-01-27 01:34:28 UTC</strong> and <strong>executed at ~2025-01-27 02:30:49 UTC</strong>. This is corroborated by the Prefetch artifact (<code class="inline-code">INVOICE.PDF.EXE-*.pf</code>) being created <strong>within 0–10 seconds of first run</strong> _(7 seconds here, at 02:30:56 UTC)_, and by the NTFS <strong>MOD</strong> event (<code class="inline-code">M</code> in <strong>MACB</strong>) at <strong>02:30:49 UTC</strong>, which reflects metadata updates occurring at execution time.</p>
+<p><code class="inline-code">invoice.pdf.exe</code> was <strong>created at 2025-01-27 01:34:28 UTC</strong> and <strong>executed at ~2025-01-27 02:30:49 UTC</strong>. This is corroborated by the Prefetch artifact (<code class="inline-code">INVOICE.PDF.EXE-*.pf</code>) being created <strong>within 0-10 seconds of first run</strong> _(7 seconds here, at 02:30:56 UTC)_, and by the NTFS <strong>MOD</strong> event (<code class="inline-code">M</code> in <strong>MACB</strong>) at <strong>02:30:49 UTC</strong>, which reflects metadata updates occurring at execution time.</p>
 <p><code class="inline-code">svchost.exe</code></p>
 <figure class="figure">
 <img src="./assets/svchost timeline.png" alt="svchost timeline">
 <figcaption>svchost timeline</figcaption>
 </figure>
-<p><code class="inline-code">C:\Users\User\AppData\Local\Temp\svchost.exe</code> was <strong>created at 2025-01-27 02:30:52 UTC</strong>, showed an <strong>NTFS MOD (M in MACB) at 02:30:53 UTC</strong>, and its Prefetch file <code class="inline-code">SVCHOST.EXE-8FEEB679.pf</code> was <strong>created at 02:30:55 UTC</strong>. Prefetch is generated within ~0–10 seconds of first run, so these artifacts indicate <strong>execution around 02:30:53–02:30:55 UTC</strong>.</p>
+<p><code class="inline-code">C:\Users\User\AppData\Local\Temp\svchost.exe</code> was <strong>created at 2025-01-27 02:30:52 UTC</strong>, showed an <strong>NTFS MOD (M in MACB) at 02:30:53 UTC</strong>, and its Prefetch file <code class="inline-code">SVCHOST.EXE-8FEEB679.pf</code> was <strong>created at 02:30:55 UTC</strong>. Prefetch is generated within ~0-10 seconds of first run, so these artifacts indicate <strong>execution around 02:30:53-02:30:55 UTC</strong>.</p>
 <p><code class="inline-code">Processes timeline:</code></p>
 <figure class="figure">
 <img src="./assets/Process timeline.png" alt="Process timeline">
 <figcaption>Process timeline</figcaption>
 </figure>
 <ul>
-<li><strong>02:30:54</strong> – <code class="inline-code">lsass.exe</code> (<strong>PID 12028</strong>, PPID 11872) starts – the rogue second instance.</li>
-<li><strong>02:30:55</strong> – <code class="inline-code">cmd.exe</code> (<strong>PID 12088</strong>, PPID 12028) spawns from <code class="inline-code">lsass.exe</code>.</li>
-<li><strong>02:30:55</strong> – <code class="inline-code">conhost.exe</code> (<strong>PID 12100</strong>, PPID 12088) attaches to <code class="inline-code">cmd.exe</code>.</li>
-<li><strong>02:31:54 → 02:32:04</strong> – <code class="inline-code">systeminfo.exe</code> (<strong>PID 5240</strong>, PPID 12088) runs briefly under <code class="inline-code">cmd.exe</code>.</li>
+<li><strong>02:30:54</strong> - <code class="inline-code">lsass.exe</code> (<strong>PID 12028</strong>, PPID 11872) starts - the rogue second instance.</li>
+<li><strong>02:30:55</strong> - <code class="inline-code">cmd.exe</code> (<strong>PID 12088</strong>, PPID 12028) spawns from <code class="inline-code">lsass.exe</code>.</li>
+<li><strong>02:30:55</strong> - <code class="inline-code">conhost.exe</code> (<strong>PID 12100</strong>, PPID 12088) attaches to <code class="inline-code">cmd.exe</code>.</li>
+<li><strong>02:31:54 → 02:32:04</strong> - <code class="inline-code">systeminfo.exe</code> (<strong>PID 5240</strong>, PPID 12088) runs briefly under <code class="inline-code">cmd.exe</code>.</li>
 </ul>
 <p>From previous sections we know that <code class="inline-code">lsass.exe</code> connected to <strong>192.168.0.157:3389</strong> at <strong>2025-01-27 02:30:55 UTC</strong> (RDP) and that the Windows Defender has the following canges:</p>
 <ul>
@@ -800,12 +800,12 @@ Matches:
 <p><strong>Assessment:</strong> A user-executed, masqueraded dropper staged a Temp <code class="inline-code">svchost.exe</code> injector that <strong>hollowed a rogue <code class="inline-code">lsass.exe</code></strong> and ran <strong>Metasploit-style shellcode</strong> within it, followed by RDP activity and interactive commands. Confidence is high given the convergence of Prefetch/Amcache, Defender Operational logs, process timelines, injected VAD characteristics, YARA hits, and reconstructed network telemetry.</p>
 <p><strong>Mapped TTPs</strong></p>
 <ul>
-<li><strong>T1055.012 – Process Hollowing</strong> (Temp <code class="inline-code">svchost.exe</code> creating the rogue LSASS)</li>
-<li><strong>T1055 – Process Injection</strong> (injected RWX+MZ VAD in LSASS)</li>
-<li><strong>T1036 – Masquerading</strong> (<code class="inline-code">invoice.pdf.exe</code> as a PDF, duplicate LSASS)</li>
-<li><strong>T1562.001 – Impair Defenses</strong> (Defender exclusions and RTP disabled)</li>
-<li><strong>T1021.001 – Remote Services: RDP</strong> (LSASS connection to 192.168.0.157:3389)</li>
-<li><strong>T1059 – Command and Scripting Interpreter</strong> (LSASS spawning <code class="inline-code">cmd.exe</code>)</li>
+<li><strong>T1055.012 - Process Hollowing</strong> (Temp <code class="inline-code">svchost.exe</code> creating the rogue LSASS)</li>
+<li><strong>T1055 - Process Injection</strong> (injected RWX+MZ VAD in LSASS)</li>
+<li><strong>T1036 - Masquerading</strong> (<code class="inline-code">invoice.pdf.exe</code> as a PDF, duplicate LSASS)</li>
+<li><strong>T1562.001 - Impair Defenses</strong> (Defender exclusions and RTP disabled)</li>
+<li><strong>T1021.001 - Remote Services: RDP</strong> (LSASS connection to 192.168.0.157:3389)</li>
+<li><strong>T1059 - Command and Scripting Interpreter</strong> (LSASS spawning <code class="inline-code">cmd.exe</code>)</li>
 </ul>
 <p><strong>IOCs</strong></p>
 
