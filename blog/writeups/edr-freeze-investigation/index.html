@@ -291,10 +291,11 @@ process exists and how the PoC was executed. Instead we focus on the
 forensics uniquely reveals.</p>
 <h2 id="correlated-thread-evidence---msmpeng-werfaultsecure">Correlated
 thread evidence - MsMpEng ↔︎ WerFaultSecure</h2>
-<p>Our PIDs of interest are: 1) 3428 –&gt; <code class="inline-code">MsMpEng.exe</code> 2)
-10892 –&gt; <code class="inline-code">WerFaultSecure.exe</code> 3) 5648 –&gt;
-<code class="inline-code">EDR-Freeze_1.0</code> 4) 10724 –&gt; <code class="inline-code">PowerShell.exe</code>
-(to some extent)</p>
+<p></strong><strong>Our PIDs of interest are:</strong></p>
+  </p>1) 3428 –&gt; <code class="inline-code">MsMpEng.exe</code></p>
+  </p>2) 10892 –&gt; <code class="inline-code">WerFaultSecure.exe</code></p>
+  </p>3) 5648 –&gt; <code class="inline-code">EDR-Freeze_1.0</code></p>
+  </p>4) 10724 –&gt; <code class="inline-code">PowerShell.exe</code> (to some extent)</p>
 <p>Starting with with enumerating suspended threads, I attempted to
 utilize the <code class="inline-code">windows.suspended_threads</code> plugin for
 Volatility3, but in returns an error and no results are printed so I
