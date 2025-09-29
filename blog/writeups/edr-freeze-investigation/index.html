@@ -4,52 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDR-Freeze - Forensic Analysis of an EDR Coma Attack | Tracepoint</title>
+<link rel="stylesheet" href="../../../css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
-:root {
-  --bg-start: #0f0f17;
-  --bg-mid: #1a1a2e;
-  --bg-end: #3a0ca3;
-  --accent: #8a2be2;
-  --terminal: #00ff00;
-  --card-bg: #ffffff;
-  --text-color: #111;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", monospace;
-  background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
-  color: var(--text-color);
-  text-align: left;
-}
-header {
-  background: linear-gradient(135deg, var(--bg-mid), var(--bg-end));
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-}
-header h1 {
-  margin: 0 0 6px;
-  font-size: 26px;
-  letter-spacing: 0.3px;
-}
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-nav a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 700;
-}
-nav a:hover, nav a.active {
-  color: #fff;
-  text-decoration: underline;
-}
+/* Additional styles for this specific page */
 .container {
   max-width: 980px;
   margin: 20px auto 60px;
@@ -72,7 +32,7 @@ h2::after, h3::after, h4::after {
   display: block;
   width: 60px;
   height: 2px;
-  background: var(--accent);
+  background: var(--accent-purple);
   margin: 10px auto 0;
 }
 h2 { font-size: 1.8em; }
@@ -87,9 +47,9 @@ ul, ol {
   line-height: 1.65;
 }
 a {
-  color: var(--accent);
+  color: var(--accent-purple);
   text-decoration: none;
-  border-bottom: 1px dotted var(--accent);
+  border-bottom: 1px dotted var(--accent-purple);
 }
 a:hover {
   color: #000;
@@ -97,36 +57,40 @@ a:hover {
 }
 pre {
   background: #000;
-  color: var(--terminal);
+  color: var(--text-primary);
   padding: 14px 16px;
   border-radius: 8px;
   overflow: auto;
-  border: 1px solid rgba(138, 43, 226, 0.35);
+  border: 1px solid var(--accent-purple-border);
   margin: 14px 0;
   font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.9em;
 }
-code.inline-code {
-  background: #000;
-  color: var(--terminal);
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(138, 43, 226, 0.35);
-  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-}
 .callout {
-  border: 1px dashed rgba(138, 43, 226, 0.45);
-  background: rgba(138, 43, 226, 0.06);
+  border: 1px dashed var(--accent-purple-border);
+  background: var(--accent-purple-light);
   padding: 14px;
   border-radius: 8px;
   margin: 18px 0;
 }
+code.inline-code {
+  background: rgba(138, 43, 226, 0.1);
+  color: #e0e0e0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
 .callout code.inline-code {
   background: none;
-  color: var(--text-color);
+  color: var(--text-secondary);
   border: none;
   padding: 0;
 }
+
 .figure {
   margin: 18px 0;
   text-align: center;
@@ -137,6 +101,7 @@ code.inline-code {
   border-radius: 8px;
   border: 1px solid rgba(0,0,0,0.15);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  cursor: zoom-in;
 }
 .figure figcaption {
   color: #222;
@@ -179,14 +144,7 @@ th {
   border-bottom: 1px dotted #fff;
   text-decoration: none;
 }
-footer {
-  margin: 30px auto 40px;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
-}
 .table-container { overflow-x: auto; }
-.figure img { cursor: zoom-in; }
 .lightbox {
   position: fixed; inset: 0;
   background: rgba(15,15,23,.95);
@@ -208,33 +166,35 @@ footer {
 }
 .lightbox .btn {
   position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,.5); color: #fff; border: 1px solid rgba(138,43,226,.45);
+  background: rgba(0,0,0,.5); color: #fff; border: 1px solid var(--accent-purple-border);
   width: 42px; height: 42px; border-radius: 999px; font-size: 22px;
   display: grid; place-items: center; cursor: pointer; user-select: none;
 }
 .lightbox .btn:hover { background: rgba(0,0,0,.75); }
 .lightbox .prev { left: 16px; }
-lightbox .next { right: 16px; }
+.lightbox .next { right: 16px; }
 .lightbox .close {
   top: 16px; right: 16px; transform: none; width: 38px; height: 38px; font-size: 20px;
 }
-
 </style>
 </head>
 <body>
 <header>
 <h1>Tracepoint</h1>
 <nav>
-<a href="https://itamarhall.github.io/Tracepoint/">Home</a>
-<a href="https://itamarhall.github.io/Tracepoint/about/">About</a>
-<a href="https://itamarhall.github.io/Tracepoint/blog/">Blog</a>
-<a href="https://itamarhall.github.io/Tracepoint/projects/">Projects</a>
-<a href="https://itamarhall.github.io/Tracepoint/certifications/">Certifications</a>
-<a href="https://itamarhall.github.io/Tracepoint/contact/">Contact</a>
+<a href="../../../">Home</a>
+<a href="../../../about/">About</a>
+<a href="../../">Blog</a>
+<a href="../../../projects/">Projects</a>
+<a href="../../../certifications/">Certifications</a>
+<a href="../../../contact/">Contact</a>
 </nav>
 </header>
+
+<!-- Theme Toggle -->
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 <div class="container">
-<div class="back"><a href="https://itamarhall.github.io/Tracepoint/blog/">← Back to Writeups</a></div>
+<div class="back"><a href="../../">← Back to Writeups</a></div>
 <div class="content">
 <div class="meta-top">
 <strong>EDR-Freeze - Forensic Analysis of an EDR Coma Attack</strong>
@@ -320,7 +280,7 @@ was intentionally held in a suspended state during the test window.</p>
 <p>Moving on to handles, I used volatility3 <code class="inline-code">windows.handles</code>
 plugin to investigate the handles opened by
 <code class="inline-code">WerFaultSecure.exe</code>:</p>
-<pre><code>python3 vol.py -q -r pretty -f /mnt/c/MemoryDumps/win11defender.raw windows.handles --pid 10892 | grep 3428</code></pre>
+<pre class="command-line"><code>python3 vol.py -q -r pretty -f /mnt/c/MemoryDumps/win11defender.raw windows.handles --pid 10892 | grep 3428</code></pre>
 <figure class="figure">
 <img src="./assets/WerFaultSecure threads in 3428.png" alt="WerFaultSecure threads in 3428">
 <figcaption>
@@ -371,7 +331,7 @@ id="wer-dbghelp-iat---static-evidence-the-helper-can-invoke-minidumps">WER
 + dbghelp IAT - static evidence the helper can invoke minidumps</h2>
 <p>using the <code class="inline-code">windows.iat.IAT</code> plugin we can look at the
 import tables used by a binary:</p>
-<pre><code>python3 vol.py -q -r pretty -f /mnt/c/MemoryDumps/win11defender.raw windows.iat.IAT --pid 10892</code></pre>
+<pre class="command-line"><code>python3 vol.py -q -r pretty -f /mnt/c/MemoryDumps/win11defender.raw windows.iat.IAT --pid 10892</code></pre>
 <figure class="figure">
 <img src="./assets/IAT by werfault.png" alt="IAT by werfault">
 <figcaption>
@@ -391,7 +351,7 @@ arguments</h2>
 <p>using the <code class="inline-code">windows.cmdline</code> plugin, we can inspect the
 command line arguments of our PIDs of interest and maybe glean more
 information or IOCs:</p>
-<pre><code>windows.cmdline --pid 10892 5648</code></pre>
+<pre class="command-line"><code>windows.cmdline --pid 10892 5648</code></pre>
 <figure class="figure">
 <img src="./assets/cmdline.png" alt="cmdline">
 <figcaption>
@@ -654,7 +614,14 @@ techniques evolve over time and how defensive strategies must adapt in
 response.</p>
 
 </div>
-<footer>© 2025 Tracepoint - Created by Itamar Hällström</footer>
+<footer>
+  <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+  <div class="social-links" style="margin-top: 1rem;">
+    <a href="https://github.com/itamarhall" target="_blank" rel="noopener" style="margin: 0 1rem;">GitHub</a>
+    <a href="https://www.linkedin.com/in/itamarhallstr/" target="_blank" rel="noopener" style="margin: 0 1rem;">LinkedIn</a>
+    <a href="mailto:itamarhallstr@gmail.com" style="margin: 0 1rem;">Email</a>
+  </div>
+</footer>
 </div>
 <div id="lightbox" class="lightbox" aria-hidden="true">
   <button class="btn close" aria-label="Close">×</button>
@@ -705,6 +672,9 @@ response.</p>
   });
 })();
 
+
+
 </script>
+<script src="../../../js/main.js"></script>
 </body>
 </html>

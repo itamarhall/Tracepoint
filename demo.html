@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tracepoint - Enhanced Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1 class="typing-animation">Tracepoint Enhanced</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about/">About</a>
+      <a href="blog/">Blog</a>
+      <a href="projects/">Projects</a>
+      <a href="certifications/">Certifications</a>
+      <a href="contact/">Contact</a>
+    </nav>
+    <div class="search-container" style="position: relative; margin-top: 1rem;">
+      <input type="text" id="search-input" placeholder="Search posts... (Ctrl+K)" style="width: 300px; padding: 0.5rem; background: var(--card-bg); border: 1px solid var(--accent-purple-border); color: var(--text-secondary); border-radius: 4px;">
+      <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--accent-purple-border); border-radius: 4px; margin-top: 4px; display: none; z-index: 1000;"></div>
+    </div>
+  </header>
+  
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+
+  <!-- Demo Features -->
+  <div class="terminal">
+    <p class="command">$ echo "Enhanced Features Demo"</p>
+    <p class="output">
+      Welcome to the enhanced Tracepoint website! This demo showcases all the new interactive features and improvements.
+    </p>
+    <p class="command">$ ls -la /features/</p>
+    <p class="output">
+      <span class="skill-tag">✨ Shared CSS</span>
+      <span class="skill-tag">🎨 Theme Toggle</span>
+      <span class="skill-tag">🔍 Search</span>
+      <span class="skill-tag">📱 Responsive</span>
+      <span class="skill-tag">⚡ Animations</span>
+      <span class="skill-tag">🎯 Interactive</span>
+    </p>
+    <p class="command">$</p><span class="blink">_</span>
+  </div>
+
+  <!-- Feature Showcase -->
+  <div class="panel">
+    <h3>🚀 New Features</h3>
+    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">🎨 Dark/Light Theme</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Click the theme toggle button in the top-right corner to switch between dark and light modes. Your preference is saved locally.</p>
+      </div>
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">🔍 Smart Search</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Use Ctrl+K or click the search box to find content across the site. Search results appear instantly with highlighted matches.</p>
+      </div>
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">⚡ Animations</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Smooth hover effects, typing animations, animated counters, and fade-in transitions create an engaging experience.</p>
+      </div>
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">📱 Responsive Design</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Fully responsive layout that works perfectly on desktop, tablet, and mobile devices with optimized touch interactions.</p>
+      </div>
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">⌨️ Keyboard Shortcuts</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Ctrl+K for search, Escape to close modals, Arrow keys for navigation. Terminal-style keyboard interactions throughout.</p>
+      </div>
+      
+      <div class="feature-card" style="padding: 1.5rem; background: var(--accent-purple-light); border-radius: 8px; border: 1px solid var(--accent-purple-border); transition: all 0.3s ease;">
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">📝 Contact Form</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Modern contact form with real-time validation, loading states, and success notifications. Check out the Contact page!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Stats Demo -->
+  <div class="panel">
+    <h3>📊 Interactive Stats</h3>
+    <p>Watch these numbers animate when you load the page:</p>
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <div class="stat-item">
+        <div class="stat-number" data-target="12">0</div>
+        <div class="stat-label">Features Added</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="100">0</div>
+        <div class="stat-label">Lines of CSS</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="500">0</div>
+        <div class="stat-label">Lines of JS</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="24">0</div>
+        <div class="stat-label">Hours Worked</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Example -->
+  <div class="panel">
+    <h3>💻 Code Example</h3>
+    <p>Here's a sample of the enhanced CSS with CSS custom properties:</p>
+    <pre style="background: #000; color: var(--text-primary); padding: 1rem; border-radius: 8px; overflow-x: auto; border: 1px solid var(--accent-purple-border); margin: 1rem 0;"><code>:root {
+  --bg-primary: #0f0f17;
+  --bg-secondary: #1a1a2e;
+  --text-primary: #00ff00;
+  --accent-purple: #8a2be2;
+  --transition-normal: 0.3s ease;
+}
+
+.terminal {
+  background: var(--card-bg);
+  border: var(--border-dashed);
+  transition: all var(--transition-normal);
+}
+
+.terminal:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}</code></pre>
+  </div>
+
+  <!-- Navigation Demo -->
+  <div class="panel">
+    <h3>🧭 Enhanced Navigation</h3>
+    <p>Try these interactive elements:</p>
+    <ul style="color: var(--text-secondary); line-height: 1.8;">
+      <li><strong>Hover effects:</strong> Move your mouse over navigation links and cards</li>
+      <li><strong>Active states:</strong> Current page is highlighted in the navigation</li>
+      <li><strong>Smooth scrolling:</strong> Click any anchor link for smooth scrolling</li>
+      <li><strong>Keyboard navigation:</strong> Use Tab to navigate through interactive elements</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Tracepoint — Enhanced Demo by Itamar Hällström</p>
+    <div class="social-links" style="margin-top: 1rem;">
+      <a href="https://github.com/itamarhall" target="_blank" rel="noopener" style="margin: 0 1rem;">GitHub</a>
+      <a href="https://www.linkedin.com/in/itamarhallstr/" target="_blank" rel="noopener" style="margin: 0 1rem;">LinkedIn</a>
+      <a href="mailto:itamarhallstr@gmail.com" style="margin: 0 1rem;">Email</a>
+    </div>
+  </footer>
+  
+  <script src="js/main.js"></script>
+  <script>
+    // Demo-specific animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animate feature cards on scroll
+      const featureCards = document.querySelectorAll('.feature-card');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, index * 100);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      featureCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+      });
+
+      // Animate stats
+      function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+          const target = parseInt(counter.getAttribute('data-target'));
+          const duration = 2000;
+          const increment = target / (duration / 16);
+          let current = 0;
+          
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
+            }
+            counter.textContent = Math.floor(current);
+          }, 16);
+        });
+      }
+      
+      // Start animation after a delay
+      setTimeout(animateCounters, 1000);
+    });
+  </script>
+</body>
+</html>
+
+
