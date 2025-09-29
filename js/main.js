@@ -636,30 +636,8 @@ class TracepointApp {
 
   // ===== LOADING STATES =====
   setupLoadingStates() {
-    // Add loading animation to external links
-    document.querySelectorAll('a[href^="http"]').forEach(link => {
-      link.addEventListener('click', () => {
-        link.innerHTML = '<span class="loading"></span> Loading...';
-      });
-    });
-
-    // Add loading state to forms
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', (e) => {
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) {
-          const originalText = submitBtn.textContent;
-          submitBtn.innerHTML = '<span class="loading"></span> Sending...';
-          submitBtn.disabled = true;
-          
-          // Re-enable after 3 seconds (for demo purposes)
-          setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-          }, 3000);
-        }
-      });
-    });
+    // Loading states disabled - no loading animations needed
+    // This method is kept for compatibility but does nothing
   }
 
   // ===== UTILITY METHODS =====
