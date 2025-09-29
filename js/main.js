@@ -30,7 +30,7 @@ class TracepointApp {
     const style = document.createElement('style');
     style.textContent = `
       /* Force CSS Master - Override everything */
-      :root {
+      :root:not([data-theme="light"]) {
         --bg-primary: #1a0d2e !important;
         --bg-secondary: #2d1b69 !important;
         --bg-accent: #4a148c !important;
@@ -46,7 +46,7 @@ class TracepointApp {
         --gradient-footer: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)) !important;
       }
       
-      [data-theme="light"] {
+      :root[data-theme="light"] {
         --bg-primary: #ffffff !important;
         --bg-secondary: #f8f9fa !important;
         --bg-accent: #e9ecef !important;
@@ -386,9 +386,10 @@ class TracepointApp {
       localStorage.setItem('theme', newTheme);
       this.updateThemeIcon(newTheme);
       
-      // Force reapply styles after theme change
+      // Force reapply CSS enforcement with new theme
       setTimeout(() => {
-        console.log('Reapplying styles for theme:', newTheme);
+        console.log('Reapplying CSS enforcement for theme:', newTheme);
+        this.enforceCSSMaster();
         this.forceApplyStyles();
       }, 50);
       
@@ -415,15 +416,19 @@ class TracepointApp {
     TracepointApp.updateThemeIcon(savedTheme);
 
     themeToggle.addEventListener('click', () => {
+      console.log('Universal theme toggle clicked!');
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
+      console.log('Switching from', currentTheme, 'to', newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       TracepointApp.updateThemeIcon(newTheme);
       
-      // Force reapply styles after theme change
+      // Force reapply CSS enforcement with new theme
       setTimeout(() => {
+        console.log('Reapplying CSS enforcement for theme:', newTheme);
+        enforceCSSMasterFallback();
         forceApplyStylesFallback();
       }, 50);
       
@@ -835,7 +840,7 @@ function initializeTheme() {
     const style = document.createElement('style');
     style.textContent = `
       /* Force CSS Master - Fallback Override */
-      :root {
+      :root:not([data-theme="light"]) {
         --bg-primary: #1a0d2e !important;
         --bg-secondary: #2d1b69 !important;
         --bg-accent: #4a148c !important;
@@ -851,7 +856,7 @@ function initializeTheme() {
         --gradient-footer: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)) !important;
       }
       
-      [data-theme="light"] {
+      :root[data-theme="light"] {
         --bg-primary: #ffffff !important;
         --bg-secondary: #f8f9fa !important;
         --bg-accent: #e9ecef !important;
@@ -1176,15 +1181,19 @@ function initializeTheme() {
     updateThemeIcon(savedTheme);
 
     themeToggle.addEventListener('click', () => {
+      console.log('Fallback theme toggle clicked!');
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
+      console.log('Switching from', currentTheme, 'to', newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       updateThemeIcon(newTheme);
       
-      // Force reapply styles after theme change
+      // Force reapply CSS enforcement with new theme
       setTimeout(() => {
+        console.log('Reapplying CSS enforcement for theme:', newTheme);
+        enforceCSSMasterFallback();
         forceApplyStylesFallback();
       }, 50);
       
