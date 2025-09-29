@@ -368,92 +368,25 @@ class TracepointApp {
 
   // ===== THEME TOGGLE =====
   setupThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-
-    // Load saved theme or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    this.updateThemeIcon(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-      console.log('Theme toggle clicked!');
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      console.log('Switching from', currentTheme, 'to', newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      this.updateThemeIcon(newTheme);
-      
-      // Force reapply CSS enforcement with new theme
-      setTimeout(() => {
-        console.log('Reapplying CSS enforcement for theme:', newTheme);
-        this.enforceCSSMaster();
-        this.forceApplyStyles();
-      }, 50);
-      
-      // Add transition effect
-      document.body.style.transition = 'all 0.3s ease';
-      setTimeout(() => {
-        document.body.style.transition = '';
-      }, 300);
-    });
+    // Theme toggle is now handled by theme.js
+    // This method is kept for compatibility but does nothing
+    // The theme system is initialized by theme-boot.js and theme.js
   }
 
   // ===== UNIVERSAL THEME TOGGLE (for pages without main.js) =====
   static setupUniversalThemeToggle() {
-    // Check if theme toggle already exists
-    if (window.themeToggleSetup) return;
-    window.themeToggleSetup = true;
-
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-
-    // Load saved theme or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    TracepointApp.updateThemeIcon(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-      console.log('Universal theme toggle clicked!');
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      console.log('Switching from', currentTheme, 'to', newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      TracepointApp.updateThemeIcon(newTheme);
-      
-      // Force reapply CSS enforcement with new theme
-      setTimeout(() => {
-        console.log('Reapplying CSS enforcement for theme:', newTheme);
-        enforceCSSMasterFallback();
-        forceApplyStylesFallback();
-      }, 50);
-      
-      // Add transition effect
-      document.body.style.transition = 'all 0.3s ease';
-      setTimeout(() => {
-        document.body.style.transition = '';
-      }, 300);
-    });
+    // Theme toggle is now handled by theme.js
+    // This method is kept for compatibility but does nothing
   }
 
   static updateThemeIcon(theme) {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-    
-    themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
+    // Theme icon updates are now handled by theme.js
+    // This method is kept for compatibility but does nothing
   }
 
   updateThemeIcon(theme) {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-    
-    themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
+    // Theme icon updates are now handled by theme.js
+    // This method is kept for compatibility but does nothing
   }
 
   // ===== TYPING ANIMATION =====
@@ -790,23 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== THEME INITIALIZATION =====
 function initializeTheme() {
-  // Load saved theme or default to dark
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  
-  // Update theme icon if it exists
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
-    themeToggle.setAttribute('aria-label', `Switch to ${savedTheme === 'dark' ? 'light' : 'dark'} theme`);
-  }
-  
-  // Force apply styles after theme is set
-  setTimeout(() => {
-    if (window.forceApplyStylesFallback) {
-      forceApplyStylesFallback();
-    }
-  }, 100);
+  // Theme initialization is now handled by theme-boot.js and theme.js
+  // This function is kept for compatibility but does nothing
 }
 
 // ===== FALLBACK CSS ENFORCEMENT & THEME TOGGLE =====
@@ -1169,48 +1087,8 @@ function initializeTheme() {
   }
 
   function initFallbackTheme() {
-    // Only run if TracepointApp hasn't already set up theme toggle
-    if (window.themeToggleSetup) return;
-
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-
-    // Load saved theme or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-      console.log('Fallback theme toggle clicked!');
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      console.log('Switching from', currentTheme, 'to', newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateThemeIcon(newTheme);
-      
-      // Force reapply CSS enforcement with new theme
-      setTimeout(() => {
-        console.log('Reapplying CSS enforcement for theme:', newTheme);
-        enforceCSSMasterFallback();
-        forceApplyStylesFallback();
-      }, 50);
-      
-      // Add transition effect
-      document.body.style.transition = 'all 0.3s ease';
-      setTimeout(() => {
-        document.body.style.transition = '';
-      }, 300);
-    });
-
-    function updateThemeIcon(theme) {
-      const themeToggle = document.getElementById('theme-toggle');
-      if (!themeToggle) return;
-      
-      themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-      themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
-    }
+    // Theme toggle is now handled by theme.js
+    // This function is kept for compatibility but does nothing
   }
 })();
 

@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDR-Freeze - Forensic Analysis of an EDR Coma Attack | Tracepoint</title>
-<link rel="stylesheet" href="/Tracepoint/css/styles.css?v=3">
+<!-- No-flash theme boot - must be first -->
+<script src="/Tracepoint/js/theme-boot.js?v=4"></script>
+<link rel="stylesheet" href="/Tracepoint/css/styles.css?v=4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -685,41 +687,7 @@ response.</p>
 
 
 </script>
-<script src="/Tracepoint/js/main.js?v=3"></script>
-<script>
-// Fallback theme toggle for EDR Freeze page
-(function() {
-  const themeToggle = document.getElementById('theme-toggle');
-  if (!themeToggle) return;
-
-  // Load saved theme or default to dark
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  updateThemeIcon(savedTheme);
-
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
-    
-    // Add transition effect
-    document.body.style.transition = 'all 0.3s ease';
-    setTimeout(() => {
-      document.body.style.transition = '';
-    }, 300);
-  });
-
-  function updateThemeIcon(theme) {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-    
-    themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
-  }
-})();
-</script>
+<script src="/Tracepoint/js/theme.js?v=4"></script>
+<script src="/Tracepoint/js/main.js?v=4"></script>
 </body>
 </html>
