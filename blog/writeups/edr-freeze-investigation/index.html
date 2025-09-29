@@ -418,10 +418,10 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#c
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>wcout<span class="op"> &lt;&lt;</span> <span class="st">L&quot;File deleted successfully.&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
-<p>These two blocks explain the origin of the temporary
+<p>These blocks explain the origin of the temporary
 <code class="inline-code">t.txt</code> file we observed. The <code class="inline-code">CreateFileW()</code> call
 creates a writable dump file (<code class="inline-code">dump_&lt;PID&gt;.txt</code>), and
-<code class="inline-code">CreateEventW()</code> sets up a cancellation handle - both passed
+<code class="inline-code">CreateEventW()</code> sets up a cancellation handle - which are passed
 to <code class="inline-code">WerFaultSecure.exe</code>. Even though the file is later
 deleted, it <strong>is written to disk during execution</strong>, which
 directly explains the transient file artifact captured in memory and
