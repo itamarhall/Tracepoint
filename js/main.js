@@ -47,10 +47,21 @@ class TracepointApp {
       }
       
       [data-theme="light"] {
+        --bg-primary: #ffffff !important;
+        --bg-secondary: #f8f9fa !important;
+        --bg-accent: #e9ecef !important;
         --text-primary: #1a4d1a !important;
         --text-secondary: #000000 !important;
         --text-muted: #333333 !important;
+        --accent-purple: #6f42c1 !important;
+        --accent-purple-light: rgba(111, 66, 193, 0.15) !important;
+        --accent-purple-border: rgba(111, 66, 193, 0.4) !important;
         --card-bg: rgba(255, 255, 255, 0.98) !important;
+        --gradient-bg: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef) !important;
+        --gradient-header: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+        --gradient-footer: linear-gradient(135deg, #e9ecef, #ffffff) !important;
+        --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
         --shadow-text: 0 0 8px rgba(26, 77, 26, 0.6) !important;
       }
       
@@ -366,15 +377,18 @@ class TracepointApp {
     this.updateThemeIcon(savedTheme);
 
     themeToggle.addEventListener('click', () => {
+      console.log('Theme toggle clicked!');
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
+      console.log('Switching from', currentTheme, 'to', newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       this.updateThemeIcon(newTheme);
       
       // Force reapply styles after theme change
       setTimeout(() => {
+        console.log('Reapplying styles for theme:', newTheme);
         this.forceApplyStyles();
       }, 50);
       
@@ -838,10 +852,21 @@ function initializeTheme() {
       }
       
       [data-theme="light"] {
+        --bg-primary: #ffffff !important;
+        --bg-secondary: #f8f9fa !important;
+        --bg-accent: #e9ecef !important;
         --text-primary: #1a4d1a !important;
         --text-secondary: #000000 !important;
         --text-muted: #333333 !important;
+        --accent-purple: #6f42c1 !important;
+        --accent-purple-light: rgba(111, 66, 193, 0.15) !important;
+        --accent-purple-border: rgba(111, 66, 193, 0.4) !important;
         --card-bg: rgba(255, 255, 255, 0.98) !important;
+        --gradient-bg: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef) !important;
+        --gradient-header: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+        --gradient-footer: linear-gradient(135deg, #e9ecef, #ffffff) !important;
+        --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
         --shadow-text: 0 0 8px rgba(26, 77, 26, 0.6) !important;
       }
       
