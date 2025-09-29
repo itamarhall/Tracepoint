@@ -251,10 +251,11 @@ process exists and how the PoC was executed. Instead we focus on the
 forensics uniquely reveals.</p>
 <h2 id="correlated-thread-evidence---msmpeng-werfaultsecure">Correlated
 thread evidence - MsMpEng ↔︎ WerFaultSecure</h2>
-<p>Our PIDs of interest are: 1) 3428 –&gt; <code class="inline-code">MsMpEng.exe</code> 2)
-10892 –&gt; <code class="inline-code">WerFaultSecure.exe</code> 3) 5648 –&gt;
-<code class="inline-code">EDR-Freeze_1.0</code> 4) 10724 –&gt; <code class="inline-code">PowerShell.exe</code>
-(to some extent)</p>
+<p></strong><strong>Our PIDs of interest are:</strong></p>
+  </p>1) 3428 –&gt; <code class="inline-code">MsMpEng.exe</code></p>
+  </p>2) 10892 –&gt; <code class="inline-code">WerFaultSecure.exe</code></p>
+  </p>3) 5648 –&gt; <code class="inline-code">EDR-Freeze_1.0</code></p>
+  </p>4) 10724 –&gt; <code class="inline-code">PowerShell.exe</code> (to some extent)</p>
 <p>Starting with with enumerating suspended threads, I attempted to
 utilize the <code class="inline-code">windows.suspended_threads</code> plugin for
 Volatility3, but in returns an error and no results are printed so I
@@ -319,7 +320,7 @@ capture.</p>
 procexp text file
 </figcaption>
 </figure>
-<p>Process Explorer shows <code class="inline-code">t.txt</code> being created,
+<p>Process Explorer shows <code class="inline-code">t.txt</code> being created in the current working directory,
 attribute-queried, and closed within a short time span - consistent with
 a temporary file</p>
 <p>This behavior isn’t malicious by itself, but it’s a useful forensic
@@ -388,19 +389,28 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#c
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>wcerr<span class="op"> &lt;&lt;</span> <span class="st">L&quot;Failed to create dump files: &quot;</span> <span class="op">&lt;&lt;</span> GetLastError<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">// 3. Create the cancellation event</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    HANDLE hCancel <span class="op">=</span> CreateEventW<span class="op">(&amp;</span>sa<span class="op">,</span> <span class="kw">TRUE</span><span class="op">,</span> <span class="kw">FALSE</span><span class="op">,</span> <span class="kw">nullptr</span><span class="op">);</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>hCancel<span class="op">)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>wcerr<span class="op"> &lt;&lt;</span> <span class="st">L&quot;Failed to create cancel event: &quot;</span> <span class="op">&lt;&lt;</span> GetLastError<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        CloseHandle<span class="op">(</span>hEncDump<span class="op">);</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+
 <div class="sourceCode" id="cb6"><pre
-class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hThread<span class="op">);</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">delete</span> params<span class="op">;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hEncDump<span class="op">);</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hCancel<span class="op">);</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Delete the useless enc file</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>DeleteFileW<span class="op">(</span><span class="st">L&quot;t.txt&quot;</span><span class="op">))</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>wcout<span class="op"> &lt;&lt;</span> <span class="st">L&quot;File deleted successfully.&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
-<p>These two blocks explain the origin of the temporary
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hThread<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">delete</span> params<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hEncDump<span class="op">);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    CloseHandle<span class="op">(</span>hCancel<span class="op">);</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Delete the useless enc file</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>DeleteFileW<span class="op">(</span><span class="st">L&quot;t.txt&quot;</span><span class="op">))</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>wcout<span class="op"> &lt;&lt;</span> <span class="st">L&quot;File deleted successfully.&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>These code blocks explain the origin of the temporary
 <code class="inline-code">t.txt</code> file we observed. The <code class="inline-code">CreateFileW()</code> call
 creates a writable dump file (<code class="inline-code">dump_&lt;PID&gt;.txt</code>), and
 <code class="inline-code">CreateEventW()</code> sets up a cancellation handle - both passed
@@ -408,8 +418,7 @@ to <code class="inline-code">WerFaultSecure.exe</code>. Even though the file is 
 deleted, it <strong>is written to disk during execution</strong>, which
 directly explains the transient file artifact captured in memory and
 Process Explorer.</p>
-<h2 id="detecting-edr-freeze_1.0-ttps-using-yara">Detecting
-<code class="inline-code">EDR-Freeze_1.0</code> TTPs using YARA</h2>
+<h2 id="detecting-edr-freeze_1.0-ttps-using-yara">Detecting EDR-Freeze_1.0 TTPs using YARA</h2>
 <p>With the evidence and source code in mind, I attempted to create YARA
 rules that will catch the binary itself and it’s evidence in memory. I
 will state that my experience with YARA and code analysis in general is
