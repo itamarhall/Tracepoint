@@ -578,14 +578,14 @@ pre.terminal-output::before {
 /* PowerShell styling */
 pre.powershell {
   background: #000 !important;
-  color: #00ff00 !important;
-  border: 2px solid #00ff00 !important;
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.15) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--text-primary) !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.15) !important;
 }
 
 pre.powershell::before {
   content: "PS> ";
-  color: #00ff00;
+  color: var(--text-primary);
   font-weight: bold;
   position: absolute;
   left: 8px;
