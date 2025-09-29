@@ -373,6 +373,11 @@ class TracepointApp {
       localStorage.setItem('theme', newTheme);
       this.updateThemeIcon(newTheme);
       
+      // Force reapply styles after theme change
+      setTimeout(() => {
+        this.forceApplyStyles();
+      }, 50);
+      
       // Add transition effect
       document.body.style.transition = 'all 0.3s ease';
       setTimeout(() => {
@@ -402,6 +407,11 @@ class TracepointApp {
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       TracepointApp.updateThemeIcon(newTheme);
+      
+      // Force reapply styles after theme change
+      setTimeout(() => {
+        forceApplyStylesFallback();
+      }, 50);
       
       // Add transition effect
       document.body.style.transition = 'all 0.3s ease';
@@ -747,6 +757,9 @@ class TracepointApp {
 
 // ===== INITIALIZE APP =====
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize theme first
+  initializeTheme();
+  
   new TracepointApp();
   
   // Add some terminal-style effects
@@ -755,6 +768,27 @@ document.addEventListener('DOMContentLoaded', () => {
     app.simulateTerminal();
   }, 500);
 });
+
+// ===== THEME INITIALIZATION =====
+function initializeTheme() {
+  // Load saved theme or default to dark
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  // Update theme icon if it exists
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
+    themeToggle.setAttribute('aria-label', `Switch to ${savedTheme === 'dark' ? 'light' : 'dark'} theme`);
+  }
+  
+  // Force apply styles after theme is set
+  setTimeout(() => {
+    if (window.forceApplyStylesFallback) {
+      forceApplyStylesFallback();
+    }
+  }, 100);
+}
 
 // ===== FALLBACK CSS ENFORCEMENT & THEME TOGGLE =====
 // This ensures CSS enforcement and theme toggle work even if main.js doesn't load properly
@@ -1013,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
   }
 
-  function forceApplyStylesFallback() {
+  window.forceApplyStylesFallback = function() {
     // Force apply critical styles to ensure they take precedence
     const elements = document.querySelectorAll('body, header, .terminal, .panel, nav, footer, .theme-toggle');
     elements.forEach(el => {
@@ -1123,6 +1157,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       updateThemeIcon(newTheme);
+      
+      // Force reapply styles after theme change
+      setTimeout(() => {
+        forceApplyStylesFallback();
+      }, 50);
       
       // Add transition effect
       document.body.style.transition = 'all 0.3s ease';
