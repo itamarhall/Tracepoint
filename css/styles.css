@@ -1,10 +1,10 @@
 /* ===== TRACEPOINT - SHARED STYLES ===== */
 
 :root {
-  /* Color Palette - Softer Dark Mode */
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16213e;
-  --bg-accent: #0f3460;
+  /* Color Palette - Purple-Focused Dark Mode */
+  --bg-primary: #1a0d2e;
+  --bg-secondary: #2d1b69;
+  --bg-accent: #4a148c;
   --text-primary: #4ade80;
   --text-secondary: #e2e8f0;
   --text-muted: #94a3b8;
@@ -15,7 +15,7 @@
   --border-dashed: 1px dashed var(--accent-purple-border);
   --border-dotted: 1px dotted var(--accent-purple);
   
-  /* Gradients */
+  /* Gradients - Purple Focused */
   --gradient-bg: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-accent));
   --gradient-header: linear-gradient(135deg, var(--bg-secondary), var(--bg-accent));
   --gradient-footer: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
@@ -800,19 +800,19 @@ pre:hover .copy-btn {
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
   --bg-accent: #e9ecef;
-  --text-primary: #2d5a27;
-  --text-secondary: #1a1a1a;
-  --text-muted: #495057;
+  --text-primary: #1a4d1a;
+  --text-secondary: #000000;
+  --text-muted: #333333;
   --accent-purple: #6f42c1;
   --accent-purple-light: rgba(111, 66, 193, 0.15);
   --accent-purple-border: rgba(111, 66, 193, 0.4);
-  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.98);
   --gradient-bg: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
   --gradient-header: linear-gradient(135deg, #f8f9fa, #e9ecef);
   --gradient-footer: linear-gradient(135deg, #e9ecef, #ffffff);
   --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
-  --shadow-text: 0 0 8px rgba(45, 90, 39, 0.4);
+  --shadow-text: 0 0 8px rgba(26, 77, 26, 0.6);
 }
 
 [data-theme="light"] .terminal::before,

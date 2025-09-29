@@ -30,6 +30,30 @@ class TracepointApp {
     const style = document.createElement('style');
     style.textContent = `
       /* Force CSS Master - Override everything */
+      :root {
+        --bg-primary: #1a0d2e !important;
+        --bg-secondary: #2d1b69 !important;
+        --bg-accent: #4a148c !important;
+        --text-primary: #4ade80 !important;
+        --text-secondary: #e2e8f0 !important;
+        --text-muted: #94a3b8 !important;
+        --accent-purple: #8b5cf6 !important;
+        --accent-purple-light: rgba(139, 92, 246, 0.15) !important;
+        --accent-purple-border: rgba(139, 92, 246, 0.35) !important;
+        --card-bg: rgba(0, 0, 0, 0.7) !important;
+        --gradient-bg: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-accent)) !important;
+        --gradient-header: linear-gradient(135deg, var(--bg-secondary), var(--bg-accent)) !important;
+        --gradient-footer: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)) !important;
+      }
+      
+      [data-theme="light"] {
+        --text-primary: #1a4d1a !important;
+        --text-secondary: #000000 !important;
+        --text-muted: #333333 !important;
+        --card-bg: rgba(255, 255, 255, 0.98) !important;
+        --shadow-text: 0 0 8px rgba(26, 77, 26, 0.6) !important;
+      }
+      
       html, body {
         font-family: 'Courier New', 'Fira Code', 'JetBrains Mono', monospace !important;
         background: var(--gradient-bg) !important;
@@ -763,6 +787,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = `
       /* Force CSS Master - Fallback Override */
+      :root {
+        --bg-primary: #1a0d2e !important;
+        --bg-secondary: #2d1b69 !important;
+        --bg-accent: #4a148c !important;
+        --text-primary: #4ade80 !important;
+        --text-secondary: #e2e8f0 !important;
+        --text-muted: #94a3b8 !important;
+        --accent-purple: #8b5cf6 !important;
+        --accent-purple-light: rgba(139, 92, 246, 0.15) !important;
+        --accent-purple-border: rgba(139, 92, 246, 0.35) !important;
+        --card-bg: rgba(0, 0, 0, 0.7) !important;
+        --gradient-bg: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-accent)) !important;
+        --gradient-header: linear-gradient(135deg, var(--bg-secondary), var(--bg-accent)) !important;
+        --gradient-footer: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary)) !important;
+      }
+      
+      [data-theme="light"] {
+        --text-primary: #1a4d1a !important;
+        --text-secondary: #000000 !important;
+        --text-muted: #333333 !important;
+        --card-bg: rgba(255, 255, 255, 0.98) !important;
+        --shadow-text: 0 0 8px rgba(26, 77, 26, 0.6) !important;
+      }
+      
       html, body {
         font-family: 'Courier New', 'Fira Code', 'JetBrains Mono', monospace !important;
         background: var(--gradient-bg) !important;
