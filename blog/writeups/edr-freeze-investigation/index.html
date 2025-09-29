@@ -74,14 +74,20 @@ pre {
   margin: 18px 0;
 }
 code.inline-code {
-  background: rgba(138, 43, 226, 0.1);
-  color: #e0e0e0;
+  background: rgba(139, 92, 246, 0.12);
+  color: #cbd5e1;
   padding: 2px 6px;
   border-radius: 3px;
-  border: 1px solid rgba(138, 43, 226, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.25);
   font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.9em;
   font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+code.inline-code:hover {
+  background: rgba(139, 92, 246, 0.18);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .callout code.inline-code {
