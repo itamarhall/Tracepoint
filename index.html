@@ -4,96 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tracepoint</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
-      color: #00ff00;
-      text-align: left;
-    }
-    header {
-      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
-      padding: 20px;
-      font-size: 24px;
-      text-align: center;
-      color: #ffffff;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-    nav a {
-      color: #8a2be2;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-    nav a:hover,
-    nav a.active {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-    .terminal, .panel {
-      background: rgba(0, 0, 0, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 900px;
-      margin: 20px auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-    .command {
-      color: #00ff00;
-      margin-bottom: 6px;
-    }
-    .output {
-      color: #ffffff;
-      margin: 0 0 16px 0;
-      line-height: 1.5;
-    }
-    .blink {
-      animation: blink 1s infinite;
-      color: #00ff00;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    .posts h3 {
-      margin-top: 0;
-      color: #ffffff;
-    }
-    .post {
-      margin: 10px 0 14px 0;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed rgba(138, 43, 226, 0.35);
-    }
-    .post a {
-      color: #8a2be2;
-      text-decoration: none;
-      border-bottom: 1px dotted #8a2be2;
-    }
-    .post a:hover {
-      color: #ffffff;
-      border-bottom-color: #ffffff;
-    }
-    .meta {
-      font-size: 12px;
-      color: #9ad49a;
-    }
-    footer {
-      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
-      padding: 10px;
-      font-size: 14px;
-      text-align: center;
-      color: #ffffff;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
-    <h1>Tracepoint</h1>
+    <h1 class="typing-animation">Tracepoint</h1>
     <nav>
       <a href="./" class="active">Home</a>
       <a href="about/">About</a>
@@ -102,7 +20,14 @@
       <a href="certifications/">Certifications</a>
       <a href="contact/">Contact</a>
     </nav>
+    <div class="search-container" style="position: relative; margin-top: 1rem;">
+      <input type="text" id="search-input" placeholder="Search posts... (Ctrl+K)" style="width: 300px; padding: 0.5rem; background: var(--card-bg); border: 1px solid var(--accent-purple-border); color: var(--text-secondary); border-radius: 4px;">
+      <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--accent-purple-border); border-radius: 4px; margin-top: 4px; display: none; z-index: 1000;"></div>
+    </div>
   </header>
+  
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 
   <!-- Terminal-style hero -->
   <div class="terminal">
@@ -111,12 +36,49 @@
       <strong>Tracepoint</strong> is my space for DFIR and Detection Engineering notes, investigations, and tools.
       Expect concise case studies, reproducible steps, and artifacts you can reuse.
     </p>
+    <p class="command">$ whoami</p>
+    <p class="output">Itamar Hällström — MDR Analyst @ Unit 42</p>
+    <p class="command">$ ls -la /skills/</p>
+    <p class="output">
+      <span class="skill-tag">DFIR</span>
+      <span class="skill-tag">Memory Forensics</span>
+      <span class="skill-tag">Detection Engineering</span>
+      <span class="skill-tag">Malware Analysis</span>
+      <span class="skill-tag">Threat Hunting</span>
+    </p>
     <p class="command">$</p><span class="blink">_</span>
+  </div>
+
+  <!-- Interactive Stats -->
+  <div class="panel">
+    <h3>Quick Stats</h3>
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <div class="stat-item">
+        <div class="stat-number" data-target="2">0</div>
+        <div class="stat-label">Case Studies</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="1">0</div>
+        <div class="stat-label">Open Source Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="1">0</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+    </div>
   </div>
 
   <!-- Upcoming posts -->
   <div class="panel posts">
-    <h3>Upcoming posts</h3>
+    <h3>Latest Posts</h3>
+    <div class="post">
+      <a href="blog/writeups/dissecting-process-hollowing-rogue-lsass-with-injected-shellcode/">Dissecting Process Hollowing - Rogue LSASS with Injected Shellcode</a>
+      <div class="meta">DFIR · Memory Forensics · Jan 2025</div>
+    </div>
+    <div class="post">
+      <a href="blog/writeups/edr-freeze-investigation/">EDR-Freeze – Forensic Analysis of an EDR Coma Attack</a>
+      <div class="meta">DFIR · Memory Forensics · Jan 2025</div>
+    </div>
     <div class="post">
       <a href="#">LSASS shellcode case study</a>
       <div class="meta">Coming soon · DFIR · Memory Forensics</div>
@@ -125,6 +87,71 @@
 
   <footer>
     <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+    <div class="social-links" style="margin-top: 1rem;">
+      <a href="https://github.com/itamarhall" target="_blank" rel="noopener" style="margin: 0 1rem;">GitHub</a>
+      <a href="https://www.linkedin.com/in/itamarhallstr/" target="_blank" rel="noopener" style="margin: 0 1rem;">LinkedIn</a>
+      <a href="mailto:itamarhallstr@gmail.com" style="margin: 0 1rem;">Email</a>
+    </div>
   </footer>
+  
+  <script src="js/main.js"></script>
+  <script>
+    // Fallback theme toggle for offline testing
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      if (!themeToggle) return;
+
+      // Load saved theme or default to dark
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+        
+        console.log('Theme switched to:', newTheme);
+      });
+    }
+
+    function updateThemeIcon(theme) {
+      const themeToggle = document.getElementById('theme-toggle');
+      if (!themeToggle) return;
+      
+      themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+      themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
+    }
+
+    // Animated counter for stats
+    function animateCounters() {
+      const counters = document.querySelectorAll('.stat-number');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const increment = target / (duration / 16); // 60fps
+        let current = 0;
+        
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          counter.textContent = Math.floor(current);
+        }, 16);
+      });
+    }
+    
+    // Start everything when page loads
+    window.addEventListener('load', () => {
+      setupThemeToggle();
+      setTimeout(animateCounters, 1000);
+      console.log('Tracepoint app initialized');
+    });
+  </script>
 </body>
 </html>

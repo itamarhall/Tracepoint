@@ -4,52 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dissecting Shellcode Execution in Memory | Tracepoint</title>
-
+<link rel="stylesheet" href="../../../css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-start: #0f0f17;
-  --bg-mid: #1a1a2e;
-  --bg-end: #3a0ca3;
-  --accent: #8a2be2;
-  --terminal: #00ff00;
-  --card-bg: #ffffff;
-  --text-color: #111;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", monospace;
-  background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
-  color: var(--text-color);
-  text-align: left;
-}
-header {
-  background: linear-gradient(135deg, var(--bg-mid), var(--bg-end));
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-}
-header h1 {
-  margin: 0 0 6px;
-  font-size: 26px;
-  letter-spacing: 0.3px;
-}
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-nav a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 700;
-}
-nav a:hover, nav a.active {
-  color: #fff;
-  text-decoration: underline;
-}
+/* Additional styles for this specific page */
 .container {
   max-width: 980px;
   margin: 20px auto 60px;
@@ -72,7 +32,7 @@ h2::after, h3::after, h4::after {
   display: block;
   width: 60px;
   height: 2px;
-  background: var(--accent);
+  background: var(--accent-purple);
   margin: 10px auto 0;
 }
 h2 { font-size: 1.8em; }
@@ -87,44 +47,36 @@ ul, ol {
   line-height: 1.65;
 }
 a {
-  color: var(--accent);
+  color: var(--accent-purple);
   text-decoration: none;
-  border-bottom: 1px dotted var(--accent);
+  border-bottom: 1px dotted var(--accent-purple);
 }
 a:hover {
   color: #000;
   border-bottom-color: #000;
 }
-pre {
-  background: #000;
-  color: var(--terminal);
-  padding: 14px 16px;
-  border-radius: 8px;
-  overflow: auto;
-  border: 1px solid rgba(138, 43, 226, 0.35);
-  margin: 14px 0;
-  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 0.9em;
-}
-code.inline-code {
-  background: #000;
-  color: var(--terminal);
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(138, 43, 226, 0.35);
-  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-}
+
 .callout {
-  border: 1px dashed rgba(138, 43, 226, 0.45);
-  background: rgba(138, 43, 226, 0.06);
+  border: 1px dashed var(--accent-purple-border);
+  background: var(--accent-purple-light);
   padding: 14px;
   border-radius: 8px;
   margin: 18px 0;
 }
-/* Remove code styling inside callout */
+code.inline-code {
+  background: rgba(138, 43, 226, 0.1);
+  color: #e0e0e0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
 .callout code.inline-code {
   background: none;
-  color: var(--text-color);
+  color: var(--text-secondary);
   border: none;
   padding: 0;
 }
@@ -138,6 +90,7 @@ code.inline-code {
   border-radius: 8px;
   border: 1px solid rgba(0,0,0,0.15);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  cursor: zoom-in;
 }
 .figure figcaption {
   color: #222;
@@ -180,15 +133,7 @@ th {
   border-bottom: 1px dotted #fff;
   text-decoration: none;
 }
-footer {
-  margin: 30px auto 40px;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
-}
 .table-container { overflow-x: auto; }
-.figure img { cursor: zoom-in; }
-
 .lightbox {
   position: fixed; inset: 0;
   background: rgba(15,15,23,.95);
@@ -210,7 +155,7 @@ footer {
 }
 .lightbox .btn {
   position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,.5); color: #fff; border: 1px solid rgba(138,43,226,.45);
+  background: rgba(0,0,0,.5); color: #fff; border: 1px solid var(--accent-purple-border);
   width: 42px; height: 42px; border-radius: 999px; font-size: 22px;
   display: grid; place-items: center; cursor: pointer; user-select: none;
 }
@@ -234,6 +179,9 @@ footer {
 <a href="../../../contact/">Contact</a>
 </nav>
 </header>
+
+<!-- Theme Toggle -->
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 <div class="container">
 <div class="back"><a href="../../">&larr; Back to Writeups</a></div>
 <div class="content">
@@ -256,7 +204,7 @@ footer {
 <hr>
 <h3><strong>Investigation</strong></h3>
 <p><strong>Basic system information</strong>:</p>
-<pre><code>windows.info</code></pre>
+<pre class="command-line"><code>windows.info</code></pre>
 <p>This plugin basic metadata information such as: </p>
 <p><code class="inline-code">SystemTime</code> - the time at which the image was taken</p>
 <p><code class="inline-code">MajorOperatingSystemVersion</code> - Windows Version</p>
@@ -266,7 +214,7 @@ footer {
 <figcaption>windows.info</figcaption>
 </figure>
 <p>The plugin suggests that the Windows version is Windows 10 but the <code class="inline-code">Major/Minor</code>, which are "15.26100", seem to mismatch. So we will query the registry to determine the version more accurately:</p>
-<pre><code>windows.registry.printkey --key "Microsoft\Windows NT\CurrentVersion" | grep -E "ProductName|ReleaseId|CurrentBuild|CurrentBuildNumber|CompositionEditionID|DisplayVersion"</code></pre>
+<pre class="command-line"><code>windows.registry.printkey --key "Microsoft\Windows NT\CurrentVersion" | grep -E "ProductName|ReleaseId|CurrentBuild|CurrentBuildNumber|CompositionEditionID|DisplayVersion"</code></pre>
 <figure class="figure">
 <img src="./assets/Query windows version registry.png" alt="Query windows version registry">
 <figcaption>Query windows version registry</figcaption>
@@ -278,7 +226,7 @@ footer {
 <li><code class="inline-code">ProductName</code> can still say "Windows 10 Pro" due to upgrade leftovers, so it’s not reliable.</li>
 </ul>
 <p><strong>Rule of thumb</strong>: Any build <strong>≥ 22000</strong> is Windows 11, regardless of what <code class="inline-code">ProductName</code> says.</p>
-<pre><code>windows.sessions</code></pre>
+<pre><code class="sourceCode">windows.sessions</code></pre>
 <p>This plugin helps us determine the Hostname and Username:</p>
 <figure class="figure">
 <img src="./assets/windows.sessions.png" alt="windows.sessions">
@@ -289,47 +237,47 @@ footer {
 <p>Due to some corruptions in the memory - I was not able to get the local IP address at this stage.</p>
 <h3>System Information</h3>
 <div class="callout"><ul>
-<li><strong>OS Version</strong>: <code>Windows 11</code></li>
-<li><strong>System Time (at capture)</strong>: <code>2025-01-27 02:31:50 (UTC)</code></li>
-<li><strong>Hostname</strong>: <code>DESKTOP-MAHIJHF</code></li>
-<li><strong>Username</strong>: <code>User</code></li>
+<li><strong>OS Version</strong>: <code class="inline-code">Windows 11</code></li>
+<li><strong>System Time (at capture)</strong>: <code class="inline-code">2025-01-27 02:31:50 (UTC)</code></li>
+<li><strong>Hostname</strong>: <code class="inline-code">DESKTOP-MAHIJHF</code></li>
+<li><strong>Username</strong>: <code class="inline-code">User</code></li>
 </ul></div>
 <p><strong>Process enumeration</strong></p>
 <p>Starting off with simple process enumeration:</p>
-<pre><code>windows.pslist</code></pre>
+<pre><code class="sourceCode">windows.pslist</code></pre>
 <p><code class="inline-code">windows.pslist</code> in Volatility walks the <strong>ActiveProcessLinks</strong> doubly-linked list in the EPROCESS structure.</p>
 <div class="callout"><ul>
-<li>Every process has an <code>ActiveProcessLinks</code> entry that points <strong>forward and backward</strong> to its neighbors.</li>
-<li>Together they form a <strong>circular doubly-linked list</strong> anchored at <code>PsActiveProcessHead</code>.</li>
-<li>By traversing this list, <code>pslist</code> shows all “linked” processes that the OS knows about.</li>
+<li>Every process has an <code class="inline-code">ActiveProcessLinks</code> entry that points <strong>forward and backward</strong> to its neighbors.</li>
+<li>Together they form a <strong>circular doubly-linked list</strong> anchored at <code class="inline-code">PsActiveProcessHead</code>.</li>
+<li>By traversing this list, <code class="inline-code">pslist</code> shows all "linked" processes that the OS knows about.</li>
 </ul></div>
 <p><strong>Note:</strong> Hidden processes (e.g. DKOM) won't be seen by <code class="inline-code">windows.pslist</code>.</p>
 <p>To efficiently analyze and triage the output of <code class="inline-code">windows.pslist</code> we can rely on the "<a href="https://medium.com/@leo.valentic9/windows-process-genealogy-understanding-and-analyzing-key-system-processes-in-digital-forensics-a88cd5b9698f">Windows Process Genealogy</a>" - that way we can more easily tell which processes are most likely benign and which stand out. </p>
 <p>Starting off with<code class="inline-code">svchost.exe</code>, which is one of the most prevalent process on any given Windows system.</p>
 <p>As such, quickly identifying whether it's instances are benign or potentially malicious will help us cut down on the result we need to analyze.</p>
 <p><code class="inline-code">svchost.exe</code> should always be the child process of <code class="inline-code">services.exe</code> on modern Windows systems.</p>
-<pre><code>windows.pslist | grep -i svchost</code></pre>
+<pre class="command-line"><code>windows.pslist | grep -i svchost</code></pre>
 <p>As we can see, all of the <code class="inline-code">svchost.exe</code> instances share the same <code class="inline-code">PPID - 772</code>:</p>
 <figure class="figure">
 <img src="./assets/svchost emum.png" alt="svchost emum">
 <figcaption>svchost emum</figcaption>
 </figure>
 <p>Enumerating <code class="inline-code">PID 772</code>: </p>
-<pre><code>windows.pslist | grep 772 | grep -i services</code></pre>
+<pre><code class="sourceCode">windows.pslist | grep 772 | grep -i services</code></pre>
 <p>As expected <code class="inline-code">PID 772</code> algins with <code class="inline-code">services.exe</code></p>
 <figure class="figure">
 <img src="./assets/services pid enum.png" alt="services pid enum">
 <figcaption>services pid enum</figcaption>
 </figure>
 <p>With the <code class="inline-code">svchost.exe</code> instances deemed benign, attention shifts to other processes. <code class="inline-code">windows.pslist</code> shows <strong>two <code class="inline-code">lsass.exe</code> processes</strong>, a clear red flag since only one should exist, and it must always be a child of <code class="inline-code">wininit.exe</code>.</p>
-<pre><code>windows.pslist | grep -i lsass.exe</code></pre>
+<pre><code class="sourceCode">windows.pslist | grep -i lsass.exe</code></pre>
 <figure class="figure">
 <img src="./assets/lsass.exe enum.png" alt="lsass.exe enum">
 <figcaption>lsass.exe enum</figcaption>
 </figure>
 <p>The suspicious process is likely <code class="inline-code">PID 12028</code>. Since <code class="inline-code">wininit.exe</code> starts early in the boot process-and <code class="inline-code">lsass.exe</code> should follow right after-seeing an <code class="inline-code">lsass.exe</code> with a high PID like <code class="inline-code">12028</code> and a parent of <code class="inline-code">11872</code> strongly suggests it’s malicious.</p>
 <p>But we can also easily verify this:</p>
-<pre><code>windows.pslist | grep 628</code></pre>
+<pre><code class="sourceCode">windows.pslist | grep 628</code></pre>
 <figure class="figure">
 <img src="./assets/PID 628.png" alt="PID 628">
 <figcaption>PID 628</figcaption>
@@ -342,11 +290,11 @@ footer {
 </figure>
 <p>the rogue <code class="inline-code">lsass.exe (PID 12028)</code> is shown spawning <code class="inline-code">cmd.exe (PID 12088)</code>, which in turn launches <code class="inline-code">systeminfo.exe (PID 5240)</code> and <code class="inline-code">conhost.exe (PID 12100)</code>. <strong>Legitimate LSASS never spawns child processes</strong>, so this parent-child chain confirms the second <code class="inline-code">lsass.exe</code> is tampered/malicious.</p>
 <p>Deeper process enumeration:</p>
-<pre><code>windows.psscan</code></pre>
+<pre><code class="sourceCode">windows.psscan</code></pre>
 <p><code class="inline-code">pslist</code> relies on the active process linked list, so it only shows processes still linked into the OS.  </p>
 <p><code class="inline-code">psscan</code> scans memory for EPROCESS structures directly, allowing it to catch hidden or terminated processes that no longer appear in the list.</p>
 <p>I couldn’t find any process matching the <code class="inline-code">PPID</code> 11872 for the suspicious <code class="inline-code">lsass.exe</code> using <code class="inline-code">pslist</code>. Although <code class="inline-code">psscan</code> often uncovers additional evidence, it produced no useful results in this case.</p>
-<pre><code>windows.netscan
+<pre><code class="sourceCode">windows.netscan
 windows.netstat</code></pre>
 <p>Both of these plugins provide network data, local and remote IPs, ports and associated process but for this memory image the data seems to be unavailable, we do get the local IP address but the remote IP addresses are blank:</p>
 <figure class="figure">
@@ -356,19 +304,19 @@ windows.netstat</code></pre>
 <h3>Findings</h3>
 <div class="callout"><ul>
 <li><strong>Suspicious Processes</strong></li>
-<li><code>12028 - lsass.exe</code></li>
-<li><code>12088 - cmd.exe</code></li>
-<li><code>5240 - systeminfo.exe</code></li>
-<li><code>12100 - conhost.exe</code></li>
+<li><code class="inline-code">12028 - lsass.exe</code></li>
+<li><code class="inline-code">12088 - cmd.exe</code></li>
+<li><code class="inline-code">5240 - systeminfo.exe</code></li>
+<li><code class="inline-code">12100 - conhost.exe</code></li>
 <li><strong>Host IP Address</strong></li>
-<li><code>192.168.0.165</code></li>
+<li><code class="inline-code">192.168.0.165</code></li>
 </ul></div>
 <hr>
 <h3><strong>Investigation - Finding malware in memory</strong></h3>
 <p>Now that suspicious activity and related processes have been identified, the next step is to dig deeper. Given the evidence, the primary focus will be on the anomalous <code class="inline-code">lsass.exe</code>, which is likely at the core of this compromise.</p>
 <p><strong>Investigating handles - <code class="inline-code">lsass.exe</code>:</strong></p>
 <p><code class="inline-code">windows.handles</code> lists the handles each process has open (files, registry keys, mutexes, events, named pipes, etc.), Which gives us evidence that reveal what a process is interacting with.</p>
-<pre><code>windows.handles --pid 12028</code></pre>
+<pre><code class="sourceCode">windows.handles --pid 12028</code></pre>
 <figure class="figure">
 <img src="./assets/lsass.exe handles.png" alt="lsass.exe handles">
 <figcaption>lsass.exe handles</figcaption>
@@ -380,7 +328,7 @@ windows.netstat</code></pre>
 <li><strong>Network handle</strong> → <code class="inline-code">\Device\Afd\Endpoint</code> inside <code class="inline-code">lsass.exe</code> is suspicious here; while LSASS can legitimately use such sockets, in this context it suggests potential malicious network activity (C2, exfiltration, lateral movement). IP/port details couldn’t be confirmed since <code class="inline-code">netscan</code> produced no output.</li>
 </ul>
 <p><strong>Investigating handles - <code class="inline-code">cmd.exe</code>:</strong></p>
-<pre><code>windows.handles --pid 12088</code></pre>
+<pre><code class="sourceCode">windows.handles --pid 12088</code></pre>
 <figure class="figure">
 <img src="./assets/cmd.exe handles.png" alt="cmd.exe handles">
 <figcaption>cmd.exe handles</figcaption>
@@ -393,7 +341,7 @@ windows.netstat</code></pre>
 <p><strong>Detecting Memory Injection with <code class="inline-code">ldrmodules</code>, <code class="inline-code">malfind</code> and <code class="inline-code">ProcSentinel</code>:</strong></p>
 <p><code class="inline-code">windows.ldrmodules</code> inspects the PEB’s DLL lists (InLoadOrder, InInitOrder, InMemOrder) to spot inconsistencies that indicate hidden/injected modules. It also shows each module’s <strong>Mapped Path</strong>: legit DLLs should map from <strong>System32/SysWOW64 (along with a few others)</strong>. <strong>Unusual paths</strong> (e.g., Downloads, Temp) <strong>or a blank path</strong> (often memory-only/manual-mapped or deleted-on-disk) are strong injection/tampering indicators.</p>
 <p><code class="inline-code">lsass.exe - PID 12028</code></p>
-<pre><code>windows.ldrmodules --pid 12028</code></pre>
+<pre><code class="sourceCode">windows.ldrmodules --pid 12028</code></pre>
 <figure class="figure">
 <img src="./assets/lsass.exe ldrmodules enum.png" alt="lsass.exe ldrmodules enum">
 <figcaption>lsass.exe ldrmodules enum</figcaption>
@@ -402,21 +350,21 @@ windows.netstat</code></pre>
 <p>I will quickly mention that cmd.exe does not show anything of note.</p>
 <p>The <strong><code class="inline-code">malfind</code></strong> plugin identifies <strong>injected code or DLLs</strong> in user-mode memory by analyzing VAD structures and memory protections. It highlights regions that are <strong>private and executable</strong>-especially when marked <strong>RWX</strong>-since they lack file mappings and remain hidden from standard inspection tools.</p>
 <p><code class="inline-code">lsass.exe - PID 12028</code></p>
-<pre><code>windows.malfind --pid 12028</code></pre>
+<pre class="cyber"><code class="sourceCode">windows.malfind --pid 12028</code></pre>
 <figure class="figure">
 <img src="./assets/lsass.exe malfind.png" alt="lsass.exe malfind">
 <figcaption>lsass.exe malfind</figcaption>
 </figure>
 <p>In <code class="inline-code">lsass.exe</code>, <code class="inline-code">malfind</code> reveals an RWX memory region (<code class="inline-code">0x140000000-0x140004fff</code>) containing an <code class="inline-code">MZ</code> header with no backing file, confirming a reflectively injected PE. The region is marked <code class="inline-code">PAGE_EXECUTE_READWRITE</code>, a highly suspicious protection flag since legitimate modules are rarely loaded with both write and execute permissions - a strong indicator of malicious code injection.</p>
 <p><strong><code class="inline-code">windows.procsentinel</code></strong> is a fairly new plugin that scans processes for anomalies such as hollowing, injected code, suspicious RWX regions, or duplicate singleton processes (like multiple <code class="inline-code">lsass.exe</code>). It also dumps suspicious memory regions for deeper analysis.</p>
-<pre><code>windows.procsentinel</code></pre>
+<pre><code class="sourceCode">windows.procsentinel</code></pre>
 <figure class="figure">
 <img src="./assets/procsentinel.png" alt="procsentinel">
 <figcaption>procsentinel</figcaption>
 </figure>
 <p><code class="inline-code">windows.procsentinel</code> flags both a duplicate <code class="inline-code">lsass.exe</code> (singleton anomaly) and an RWX memory region with an MZ header, aligning with ATT&amp;CK T1036 (Masquerading) and T1055 (Process Injection), confirming malicious tampering.</p>
 <p>Before wrapping up this section, we know that both <code class="inline-code">lsass.exe</code> and <code class="inline-code">cmd.exe</code> interacted with the <code class="inline-code">Downloads</code> directory - making it a natural pivot point. We can use <code class="inline-code">windows.filescan</code> to quickly check for suspicious files:</p>
-<pre><code>windows.filescan | grep \Downloads</code></pre>
+<pre><code class="sourceCode">windows.filescan | grep \Downloads</code></pre>
 <figure class="figure">
 <img src="./assets/filescan downloads.png" alt="filescan downloads">
 <figcaption>filescan downloads</figcaption>
@@ -424,19 +372,19 @@ windows.netstat</code></pre>
 <p>The results reveal a file named <strong><code class="inline-code">invoice.pdf.exe</code></strong> in the <code class="inline-code">Downloads</code> folder - a classic <strong>masquerading technique</strong> where a malicious executable disguises itself as a benign document.</p>
 <h3>Findings</h3>
 <div class="callout"><ul>
-<li><strong>Rogue <code>lsass.exe</code> (PID 12028)</strong> - duplicate singleton with a reflectively injected PE (<code>RWX</code> region, MZ header, no mapped path).</li>
-<li><strong><code>cmd.exe</code> (PID 12088)</strong> - spawned as a child of the rogue LSASS, interacting with the <code>Downloads</code> directory.</li>
-<li><strong>Suspicious file <code>invoice.pdf.exe</code></strong> - discovered in <code>Downloads</code>, posing as a document to evade detection.</li>
+<li><strong>Rogue <code class="inline-code">lsass.exe</code> (PID 12028)</strong> - duplicate singleton with a reflectively injected PE (<code class="inline-code">RWX</code> region, MZ header, no mapped path).</li>
+<li><strong><code class="inline-code">cmd.exe</code> (PID 12088)</strong> - spawned as a child of the rogue LSASS, interacting with the <code class="inline-code">Downloads</code> directory.</li>
+<li><strong>Suspicious file <code class="inline-code">invoice.pdf.exe</code></strong> - discovered in <code class="inline-code">Downloads</code>, posing as a document to evade detection.</li>
 </ul></div>
 <h3>Mapped TTPs (MITRE ATT&amp;CK)</h3>
 
 <div class="callout">
   <ul>
-    <li><strong>Process Injection (T1055)</strong> - reflective PE injection into <code>lsass.exe</code>.</li>
+    <li><strong>Process Injection (T1055)</strong> - reflective PE injection into <code class="inline-code">lsass.exe</code>.</li>
     <li><strong>Masquerading (T1036)</strong>
       <ul>
-        <li>Rogue <code>lsass.exe</code> imitating a legitimate system process.</li>
-        <li><code>invoice.pdf.exe</code> mimicking a benign PDF.</li>
+        <li>Rogue <code class="inline-code">lsass.exe</code> imitating a legitimate system process.</li>
+        <li><code class="inline-code">invoice.pdf.exe</code> mimicking a benign PDF.</li>
       </ul>
     </li>
   </ul>
@@ -444,7 +392,7 @@ windows.netstat</code></pre>
 
 <div class="callout">
   <ul>
-    <li><strong>Command and Scripting Interpreter (T1059)</strong> - attacker use of <code>cmd.exe</code>.</li>
+    <li><strong>Command and Scripting Interpreter (T1059)</strong> - attacker use of <code class="inline-code">cmd.exe</code>.</li>
   </ul>
 </div>
 <h3><strong>Investigation - Extracting artifacts for disk based analysis</strong></h3>
@@ -458,14 +406,14 @@ windows.netstat</code></pre>
 <li><strong>Suspect files and processes</strong> - copy <code class="inline-code">invoice.pdf.exe</code> and dump suspicious process (<code class="inline-code">lsass.exe</code>) memory/files for further analysis.</li>
 </ul>
 <p><strong>Shimcache:</strong></p>
-<pre><code>windows.shimcachemem</code></pre>
+<pre><code class="sourceCode">windows.shimcachemem</code></pre>
 <figure class="figure">
 <img src="./assets/shimcachemem.png" alt="shimcachemem">
 <figcaption>shimcachemem</figcaption>
 </figure>
 <p>Note that the timestamps are <strong>Last Modified</strong> - they do not indicate execution time. Entries higher in the list were shimmed more recently.</p>
 <p>We find a high-priority anomaly:</p>
-<pre><code>C:\Users\User\AppData\Local\Temp\svchost.exe </code></pre>
+<pre><code class="sourceCode">C:\Users\User\AppData\Local\Temp\svchost.exe </code></pre>
 <p>This nonstandard path is an immediate red flag and needs investigation.</p>
 <p>The remaining hits - <code class="inline-code">invoice.pdf.exe</code>, <code class="inline-code">conhost.exe</code> (spawned by <code class="inline-code">cmd.exe</code> but <code class="inline-code">cmd.exe</code> itself is absent here), <code class="inline-code">whoami.exe</code>, and <code class="inline-code">systeminfo.exe</code> - align with earlier findings and further corroborate the activity.</p>
 <p><strong>Amcache:</strong></p>
@@ -521,7 +469,7 @@ windows.netstat</code></pre>
 <figcaption>PEStudio imports</figcaption>
 </figure>
 <p>Seven imports consistent with a hollowing/remote-injection toolchain:</p>
-<pre><code>CreateProcessA
+<pre><code class="sourceCode">CreateProcessA
 GetThreadContext
 SetThreadContext
 VirtualAllocEx
@@ -539,7 +487,7 @@ WriteProcessMemory</code></pre>
 <img src="./assets/svchost hollowing.png" alt="svchost hollowing">
 <figcaption>svchost hollowing</figcaption>
 </figure>
-<p>Strings and imports together narrate a textbook RunPE/process-hollowing sequence: a benign host is created with its primary thread suspended (<code>CreateProcess</code>), remote memory is reserved in the target (<code>VirtualAllocEx</code>), the payload’s PE headers and sections are written in (<code>WriteProcessMemory</code>), the thread context is redirected to the payload entry point (<code>GetThreadContext</code>/<code>SetThreadContext</code>), and execution is handed off by resuming the thread (<code>ResumeThread</code>)-a flow squarely consistent with <strong>MITRE ATT&amp;CK T1055.012 (Process Hollowing)</strong>.</p>
+<p>Strings and imports together narrate a textbook RunPE/process-hollowing sequence: a benign host is created with its primary thread suspended (<code class="inline-code">CreateProcess</code>), remote memory is reserved in the target (<code class="inline-code">VirtualAllocEx</code>), the payload's PE headers and sections are written in (<code class="inline-code">WriteProcessMemory</code>), the thread context is redirected to the payload entry point (<code class="inline-code">GetThreadContext</code>/<code class="inline-code">SetThreadContext</code>), and execution is handed off by resuming the thread (<code class="inline-code">ResumeThread</code>)-a flow squarely consistent with <strong>MITRE ATT&amp;CK T1055.012 (Process Hollowing)</strong>.</p>
 <hr>
 <p>Target: <code class="inline-code">invoice.pdf.exe</code> at <code class="inline-code">C:\Users\User\Downloads\</code></p>
 <p><strong>PEStudio - basic info</strong>  </p>
@@ -594,7 +542,7 @@ WriteProcessMemory</code></pre>
 <p>Target: <code class="inline-code">lsass.exe PID 12028</code> </p>
 <p><strong>Elastics's YARA Rules</strong></p>
 <p>Elastic YARA scanning of the injected VAD in <strong>LSASS (PID 12028)</strong> at <strong>0x0000000140000000</strong> produced three hits: <strong>Windows_Trojan_Metasploit_7bc0f998</strong>, <strong>Windows_Trojan_Metasploit_c9773203</strong>, and <strong>Windows_Trojan_Metasploit_91bc5d7d</strong>. These rules match the canonical x64 API-hashing/resolver stub used by Metasploit and derivatives. The matched bytes reference <strong>ws2_32</strong> and include the inline IPv4 connect tuple <strong>02 00 0d 3d c0 a8 00 9d</strong>, which decodes to <strong>AF_INET, 192.168.0.157:3389</strong>. All hits fall within the same <strong>unmapped RWX region with an MZ header</strong> previously identified by <code class="inline-code">malfind</code>, <strong>confirming a hollowed <code class="inline-code">lsass.exe</code> hosting network-capable shellcode</strong>.</p>
-<pre><code>Match Index:  0
+<pre><code class="sourceCode">Match Index:  0
 Rule:         Windows_Trojan_Metasploit_7bc0f998
 Tags:         
 Author:       Elastic Security
@@ -777,20 +725,20 @@ Matches:
 <thead><tr><th>Time (UTC)</th><th>Source</th><th>Artifact/Event</th><th>Details</th><th>MITRE ATT&amp;CK</th></tr></thead>
 <tbody>
 <tr><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
-<tr><td><strong>2025-01-27 01:34:28</strong></td><td>NTFS</td><td><code>invoice.pdf.exe</code> created</td><td><code>C:\Users\User\Downloads\invoice.pdf.exe</code></td><td>T1036 (masquerading)</td></tr>
-<tr><td><strong>2025-01-27 02:27:18</strong></td><td>Defender Operational</td><td>Exclusion added</td><td><code>Downloads</code> folder added to Defender exclusions</td><td>T1562.001</td></tr>
+<tr><td><strong>2025-01-27 01:34:28</strong></td><td>NTFS</td><td><code class="inline-code">invoice.pdf.exe</code> created</td><td><code class="inline-code">C:\Users\User\Downloads\invoice.pdf.exe</code></td><td>T1036 (masquerading)</td></tr>
+<tr><td><strong>2025-01-27 02:27:18</strong></td><td>Defender Operational</td><td>Exclusion added</td><td><code class="inline-code">Downloads</code> folder added to Defender exclusions</td><td>T1562.001</td></tr>
 <tr><td><strong>2025-01-27 02:27:51</strong></td><td>Defender Operational</td><td>Real-Time Protection disabled</td><td>RTP off</td><td>T1562.001</td></tr>
-<tr><td><strong>2025-01-27 02:30:49</strong></td><td>NTFS/Prefetch</td><td><code>invoice.pdf.exe</code> executed</td><td>NTFS <code>MOD</code> at 02:30:49; Prefetch <code>INVOICE.PDF.EXE-*.pf</code> created at 02:30:56 (+7 s)</td><td>T1036, T1055 (stager)</td></tr>
-<tr><td><strong>2025-01-27 02:30:52</strong></td><td>NTFS</td><td>Temp <code>svchost.exe</code> created</td><td><code>C:\Users\User\AppData\Local\Temp\svchost.exe</code></td><td>T1036</td></tr>
-<tr><td><strong>2025-01-27 02:30:53</strong></td><td>NTFS</td><td>Temp <code>svchost.exe</code> metadata modified (execution-correlated)</td><td>NTFS <code>MOD</code> (M in MACB)</td></tr>
-<tr><td><strong>2025-01-27 02:30:54</strong></td><td>MemProcFS VAD/YARA</td><td>Metasploit-style shellcode in LSASS</td><td>Hits in injected VAD @ <code>0x140000000</code> (block_api/API hashing), RWX+MZ</td><td>T1055, T1055.012</td></tr>
-<tr><td><strong>2025-01-27 02:30:54</strong></td><td>Processes</td><td>Rogue <code>lsass.exe</code> started</td><td><code>PID 12028</code>, <code>PPID 11872</code></td><td>T1036</td></tr>
-<tr><td><strong>2025-01-27 02:30:55</strong></td><td>Prefetch</td><td>Temp <code>svchost.exe</code> Prefetch created</td><td><code>SVCHOST.EXE-8FEEB679.pf</code></td></tr>
-<tr><td><strong>2025-01-27 02:30:55</strong></td><td>Processes</td><td><code>cmd.exe</code> spawned by <code>lsass.exe</code></td><td><code>PID 12088</code> from <code>PID 12028</code>; <code>conhost.exe</code> (<code>PID 12100</code>) attaches</td><td>T1059</td></tr>
-<tr><td><strong>2025-01-27 02:30:55</strong></td><td>MemProcFS Network</td><td>LSASS network connection</td><td><code>lsass.exe</code> → <code>192.168.0.157:3389</code> (RDP)</td><td>T1021.001</td></tr>
-<tr><td><strong>2025-01-27 02:30:56</strong></td><td>Prefetch</td><td><code>invoice.pdf.exe</code> Prefetch created</td><td><code>INVOICE.PDF.EXE-*.pf</code></td></tr>
+<tr><td><strong>2025-01-27 02:30:49</strong></td><td>NTFS/Prefetch</td><td><code class="inline-code">invoice.pdf.exe</code> executed</td><td>NTFS <code class="inline-code">MOD</code> at 02:30:49; Prefetch <code class="inline-code">INVOICE.PDF.EXE-*.pf</code> created at 02:30:56 (+7 s)</td><td>T1036, T1055 (stager)</td></tr>
+<tr><td><strong>2025-01-27 02:30:52</strong></td><td>NTFS</td><td>Temp <code class="inline-code">svchost.exe</code> created</td><td><code class="inline-code">C:\Users\User\AppData\Local\Temp\svchost.exe</code></td><td>T1036</td></tr>
+<tr><td><strong>2025-01-27 02:30:53</strong></td><td>NTFS</td><td>Temp <code class="inline-code">svchost.exe</code> metadata modified (execution-correlated)</td><td>NTFS <code class="inline-code">MOD</code> (M in MACB)</td></tr>
+<tr><td><strong>2025-01-27 02:30:54</strong></td><td>MemProcFS VAD/YARA</td><td>Metasploit-style shellcode in LSASS</td><td>Hits in injected VAD @ <code class="inline-code">0x140000000</code> (block_api/API hashing), RWX+MZ</td><td>T1055, T1055.012</td></tr>
+<tr><td><strong>2025-01-27 02:30:54</strong></td><td>Processes</td><td>Rogue <code class="inline-code">lsass.exe</code> started</td><td><code class="inline-code">PID 12028</code>, <code class="inline-code">PPID 11872</code></td><td>T1036</td></tr>
+<tr><td><strong>2025-01-27 02:30:55</strong></td><td>Prefetch</td><td>Temp <code class="inline-code">svchost.exe</code> Prefetch created</td><td><code class="inline-code">SVCHOST.EXE-8FEEB679.pf</code></td></tr>
+<tr><td><strong>2025-01-27 02:30:55</strong></td><td>Processes</td><td><code class="inline-code">cmd.exe</code> spawned by <code class="inline-code">lsass.exe</code></td><td><code class="inline-code">PID 12088</code> from <code class="inline-code">PID 12028</code>; <code class="inline-code">conhost.exe</code> (<code class="inline-code">PID 12100</code>) attaches</td><td>T1059</td></tr>
+<tr><td><strong>2025-01-27 02:30:55</strong></td><td>MemProcFS Network</td><td>LSASS network connection</td><td><code class="inline-code">lsass.exe</code> → <code class="inline-code">192.168.0.157:3389</code> (RDP)</td><td>T1021.001</td></tr>
+<tr><td><strong>2025-01-27 02:30:56</strong></td><td>Prefetch</td><td><code class="inline-code">invoice.pdf.exe</code> Prefetch created</td><td><code class="inline-code">INVOICE.PDF.EXE-*.pf</code></td></tr>
 <tr><td><strong>2025-01-27 02:31:50</strong></td><td>Memory capture</td><td>System time at capture</td><td>Anchor</td></tr>
-<tr><td><strong>2025-01-27 02:31:54</strong></td><td>Processes</td><td><code>systeminfo.exe</code> started (child of <code>cmd.exe</code>)</td><td><code>PID 5240</code> from <code>PID 12088</code>; exits at 02:32:04</td><td>T1059</td></tr>
+<tr><td><strong>2025-01-27 02:31:54</strong></td><td>Processes</td><td><code class="inline-code">systeminfo.exe</code> started (child of <code class="inline-code">cmd.exe</code>)</td><td><code class="inline-code">PID 5240</code> from <code class="inline-code">PID 12088</code>; exits at 02:32:04</td><td>T1059</td></tr>
 </tbody></table>
 </div>
 <hr>
@@ -836,8 +784,16 @@ Matches:
     </tr>
   </tbody>
 </table>
+
 </div>
-<footer>&copy; 2025 Tracepoint - Created by Itamar Hällström</footer>
+<footer>
+  <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+  <div class="social-links" style="margin-top: 1rem;">
+    <a href="https://github.com/itamarhall" target="_blank" rel="noopener" style="margin: 0 1rem;">GitHub</a>
+    <a href="https://www.linkedin.com/in/itamarhallstr/" target="_blank" rel="noopener" style="margin: 0 1rem;">LinkedIn</a>
+    <a href="mailto:itamarhallstr@gmail.com" style="margin: 0 1rem;">Email</a>
+  </div>
+</footer>
 </div>
 <div id="lightbox" class="lightbox" aria-hidden="true">
   <button class="btn close" aria-label="Close">&times;</button>
@@ -897,6 +853,44 @@ Matches:
     if (e.key === 'ArrowRight') show(i+1);
     if (e.key === 'ArrowLeft')  show(i-1);
   });
+})();
+
+
+</script>
+<script src="../../../js/main.js"></script>
+<script>
+// Fallback theme toggle for LSASS page
+(function() {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (!themeToggle) return;
+
+  // Load saved theme or default to dark
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+    
+    // Add transition effect
+    document.body.style.transition = 'all 0.3s ease';
+    setTimeout(() => {
+      document.body.style.transition = '';
+    }, 300);
+  });
+
+  function updateThemeIcon(theme) {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+    
+    themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
+  }
 })();
 </script>
 </body>

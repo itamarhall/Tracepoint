@@ -4,86 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | Tracepoint</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
-      color: #00ff00;
-      text-align: left;
-    }
-    header {
-      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
-      padding: 20px;
-      font-size: 24px;
-      text-align: center;
-      color: #ffffff;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-    nav a {
-      color: #8a2be2;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-    nav a:hover,
-    nav a.active {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-
-    .panel {
-      background: rgba(0,0,0,0.9);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 900px;
-      margin: 20px auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .panel a {
-      color: #8a2be2;
-      text-decoration: none;
-      border-bottom: 1px dotted #8a2be2;
-    }
-    .panel a:hover {
-      color: #ffffff;
-      border-bottom-color: #ffffff;
-    }
-
-    /* Writeups callout (keeps theme colors) */
-    .writeups {
-      border: 1px dashed rgba(0,255,0,0.35);
-    }
-    .cta {
-      display: block;
-      padding: 14px 16px;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.6);
-      border: 1px dotted rgba(138,43,226,0.35);
-      margin-top: 10px;
-    }
-    .cta h3 {
-      margin: 0 0 6px 0;
-      color: #ffffff;
-    }
-    .meta {
-      font-size: 12px;
-      color: #9ad49a;
-    }
-
-    footer {
-      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
-      padding: 10px;
-      font-size: 14px;
-      text-align: center;
-      color: #ffffff;
-    }
-  </style>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -97,6 +21,9 @@
       <a href="../contact/">Contact</a>
     </nav>
   </header>
+  
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 
   <div class="panel">
     <h2>Coming Soon</h2>
@@ -114,7 +41,14 @@
   </div>
 
   <footer>
-    &copy; 2025 Tracepoint — Created by Itamar Hällström
+    <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
+    <div class="social-links" style="margin-top: 1rem;">
+      <a href="https://github.com/itamarhall" target="_blank" rel="noopener" style="margin: 0 1rem;">GitHub</a>
+      <a href="https://www.linkedin.com/in/itamarhallstr/" target="_blank" rel="noopener" style="margin: 0 1rem;">LinkedIn</a>
+      <a href="mailto:itamarhallstr@gmail.com" style="margin: 0 1rem;">Email</a>
+    </div>
   </footer>
+  
+  <script src="../js/main.js"></script>
 </body>
 </html>
