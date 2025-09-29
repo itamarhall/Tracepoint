@@ -4,109 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AbuseCheck | Tracepoint</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #0f0f17, #1a1a2e, #3a0ca3);
-      color: #00ff00; /* page accent */
-      text-align: left;
-    }
-    header {
-      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
-      padding: 20px;
-      font-size: 24px;
-      text-align: center;
-      color: #ffffff;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-    nav a {
-      color: #8a2be2;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-    nav a:hover,
-    nav a.active {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-
-    /* layout containers */
-    .wrap { max-width: 900px; margin: 20px auto 60px; padding: 0 16px; }
-    .back { max-width: 900px; margin: 14px auto -4px; padding: 0 16px; }
-    .back a { color:#ffffff; text-decoration:none; border-bottom:1px dotted #ffffff; }
-
-    /* terminal + panel blocks */
-    .terminal, .panel {
-      background: rgba(0, 0, 0, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 900px;
-      margin: 20px auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-    .command { color: #00ff00; margin-bottom: 6px; }
-    .output  { color: #ffffff; margin: 0 0 16px 0; line-height: 1.6; }
-    .blink { animation: blink 1s infinite; color: #00ff00; }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* panel headings + links */
-    .panel h3 { margin: 0 0 12px 0; color: #00ff00; }
-    .panel p, .panel li, .panel code { color: #ffffff; }
-    .panel a { color: #8a2be2; text-decoration: none; border-bottom: 1px dotted #8a2be2; }
-    .panel a:hover { color: #ffffff; border-bottom-color: #ffffff; }
-
-    /* nested code terminal inside panels (for commands) */
-    .mini-term {
-      background: #000;
-      border: 1px dashed rgba(138, 43, 226, 0.35);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin: 10px 0 0 0;
-      overflow: auto;
-    }
-    .mini-term .command { margin: 0 0 6px 0; }
-    .mini-term .output  { margin: 0; }
-
-    /* inline flag badges */
-    code.flag {
-      background:#000;
-      color:#00ff00;
-      border:1px solid rgba(138,43,226,0.35);
-      padding:1px 6px;
-      border-radius: 4px;
-    }
-
-    footer {
-      background: linear-gradient(135deg, #1a1a2e, #0f0f17);
-      padding: 10px;
-      font-size: 14px;
-      text-align: center;
-      color: #ffffff;
-    }
-  </style>
+  <link rel="stylesheet" href="/Tracepoint/css/styles.css?v=3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
     <h1>Tracepoint</h1>
     <nav>
-      <a href="/"          >Home</a>
-      <a href="/about/"    >About</a>
-      <a href="/blog/"     >Blog</a>
-      <a href="/projects/" class="active">Projects</a>
-      <a href="/certifications/">Certifications</a>
-      <a href="/contact/"  >Contact</a>
+      <a href="/Tracepoint/"          >Home</a>
+      <a href="/Tracepoint/about/"    >About</a>
+      <a href="/Tracepoint/blog/"     >Blog</a>
+      <a href="/Tracepoint/projects/" class="active">Projects</a>
+      <a href="/Tracepoint/certifications/">Certifications</a>
+      <a href="/Tracepoint/contact/"  >Contact</a>
     </nav>
   </header>
 
   <div class="back">
-    <a href="/projects/">&larr; Back to Projects</a>
+    <a href="/Tracepoint/projects/">&larr; Back to Projects</a>
   </div>
 
   <!-- Terminal-style hero -->
@@ -189,5 +106,6 @@ pip install -r requirements.txt</pre>
   <footer>
     <p>&copy; 2025 Tracepoint — Created by Itamar Hällström</p>
   </footer>
+  <script src="/Tracepoint/js/main.js?v=3"></script>
 </body>
 </html>
