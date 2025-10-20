@@ -12,7 +12,6 @@ class TracepointApp {
     this.setupSmoothScrolling();
     this.setupNavigation();
     this.setupAnimations();
-		this.setupTiltEffects();
     this.setupSearch();
     this.setupKeyboardShortcuts();
     this.setupLoadingStates();
@@ -666,65 +665,6 @@ class TracepointApp {
     }, 3000);
   }
 
-	// ===== 3D TILT EFFECTS =====
-	setupTiltEffects() {
-		const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (prefersReducedMotion) return;
-
-		const cards = document.querySelectorAll('.cert-card');
-		if (!cards.length) return;
-
-		const maxRotateX = 12; // degrees
-		const maxRotateY = 16; // degrees
-
-		cards.forEach(card => {
-			let rafId = null;
-
-			const reset = () => {
-				card.style.transform = '';
-				card.style.transition = 'transform 200ms ease';
-				setTimeout(() => { card.style.transition = ''; }, 200);
-			};
-
-			const onMove = (e) => {
-				const rect = card.getBoundingClientRect();
-				const clientX = e.clientX ?? (e.touches && e.touches[0]?.clientX);
-				const clientY = e.clientY ?? (e.touches && e.touches[0]?.clientY);
-				if (clientX == null || clientY == null) return;
-
-				const x = clientX - rect.left;
-				const y = clientY - rect.top;
-				const px = (x / rect.width) - 0.5;  // -0.5 .. 0.5
-				const py = (y / rect.height) - 0.5; // -0.5 .. 0.5
-
-				const rotateY = px * (maxRotateY * 2);
-				const rotateX = -py * (maxRotateX * 2);
-
-				if (rafId) cancelAnimationFrame(rafId);
-				rafId = requestAnimationFrame(() => {
-					card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-10px) scale(1.06)`;
-				});
-			};
-
-			const onEnter = () => {
-				card.style.willChange = 'transform';
-			};
-
-			const onLeave = () => {
-				if (rafId) cancelAnimationFrame(rafId);
-				rafId = null;
-				reset();
-			};
-
-			card.addEventListener('mouseenter', onEnter, { passive: true });
-			card.addEventListener('mousemove', onMove);
-			card.addEventListener('mouseleave', onLeave, { passive: true });
-
-			card.addEventListener('touchstart', onEnter, { passive: true });
-			card.addEventListener('touchmove', onMove, { passive: true });
-			card.addEventListener('touchend', onLeave, { passive: true });
-		});
-	}
 
   // ===== TERMINAL SIMULATION =====
   simulateTerminal() {
